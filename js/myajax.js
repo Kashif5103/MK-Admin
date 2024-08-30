@@ -93,32 +93,59 @@ $(document).ready(function() {
             });
         }
     });
-    $(document).ready(function () {
-        $('#email').on('blur', function () {
-            var email = $(this).val().trim();
-    
-            if (email != '') {
-                $.ajax({
-                    url: "check_email.php",
-                    method: "POST",
-                    data: { email: email },
-                    success: function (response) {
-                        if (response.trim() == 'taken') {
-                            $('#email-status').html('<span style="color: red;">✖ Email Already registered</span>');
-                        } else if (response.trim() == 'available') {
-                            $('#email-status').html('<span style="color: green;">✔ Email Available</span>');
-                        }
-                    },
-                    error: function () {
-                        $('#email-status').html('<span style="color: red;">Error checking email</span>');
+
+    // Check email availability on blur event
+    $('#email').on('blur', function() {
+        var email = $(this).val().trim();
+
+        if (email != '') {
+            $.ajax({
+                url: "check_email.php",
+                method: "POST",
+                data: { email: email },
+                success: function(response) {
+                    if (response.trim() == 'taken') {
+                        $('#email-status').html('<span style="color: red;">✖ Email Already registered</span>');
+                    } else if (response.trim() == 'available') {
+                        $('#email-status').html('<span style="color: green;">✔ Email Available</span>');
                     }
-                });
-            } else {
-                $('#email-status').html('');
+                },
+                error: function() {
+                    $('#email-status').html('<span style="color: red;">Error checking email</span>');
+                }
+            });
+        } else {
+            $('#email-status').html('');
+        }
+    });
+
+    // Handle login form submission
+    $('#login_form').on('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        let formData = $(this).serialize(); // Serialize form data for sending via AJAX
+
+        // AJAX request to login
+        $.ajax({
+            url: 'login.php', // The URL for the login request
+            type: 'POST', // The HTTP method for the request
+            data: formData, // The serialized form data
+            dataType: 'json', // Expecting JSON response
+            success: function(response) {
+                if (response.status === 'success') {
+                    // If login is successful, redirect to index.html
+                    window.location.href = 'index.html';
+                } else {
+                    // If there is an error, show the error message
+                    $('#status_message').removeClass('alert-success').addClass('alert-danger').html(response.message).show();
+                }
+            },
+            error: function() {
+                // If there's an error during the request, show a generic error message
+                $('#status_message').removeClass('alert-success').addClass('alert-danger').html('Failed to process login request.').show();
             }
         });
     });
-    
 
     // Initial load of data when the document is ready
     loadData();

@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Nice Admin 2 - Register</title>
+    <title>MK Admin 2 - Register</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -42,7 +42,9 @@
                                     <input type="text" class="form-control form-control-user" name="name" id="exampleName" placeholder="Full Name" required>
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" name="email" id="exampleInputEmail" placeholder="Email Address" required>
+                                   
+                                    <input type="email" class="form-control form-control-user" id="email" name="email" placeholder="Email Address" required>
+                                    <div id="email-status"></div> <!-- This element will show the email status -->
                                 </div>
                                 <div class="form-group">
                                     <input type="password" class="form-control form-control-user" name="password" id="exampleInputPassword" placeholder="Password" required>
@@ -76,6 +78,10 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
+    <!-- Include jQuery, Bootstrap, and custom AJAX scripts -->
+    <script src="js/jQuery.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/myajax.js"></script>
 
 </body>
 

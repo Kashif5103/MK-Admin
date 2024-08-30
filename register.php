@@ -20,16 +20,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $conn->real_escape_string($_POST['email']);
     $password = $conn->real_escape_string($_POST['password']);
 
-    // Prepare and execute the SQL statement to insert data into the database
-    $sql = "INSERT INTO Student (name, email, password) VALUES ('$name', '$email', '$password')";
+    // Check if the email already exists in the database
+    $checkEmailQuery = "SELECT id FROM Student WHERE email = '$email'";
+    $result = $conn->query($checkEmailQuery);
 
-    if ($conn->query($sql) === TRUE) {
-        echo "New record created successfully";
-        // Redirect to the login page after successful registration
-        header("Location: login.html");
-        exit();
+    if ($result->num_rows > 0) {
+        // If email already exists, send a response
+        echo "Error: Email already registered!";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        // If email is available, insert new user into the database
+        $sql = "INSERT INTO Student (name, email, password) VALUES ('$name', '$email', '$password')";
+
+        if ($conn->query($sql) === TRUE) {
+            // If registration is successful, redirect to login.html
+            echo "Registration successful!";
+            header("Location: login.html");
+            exit();
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
     }
 }
 

@@ -10,7 +10,7 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check if the connection to the database was successful
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die(json_encode(array("status" => "error", "message" => "Connection failed: " . $conn->connect_error)));
 }
 
 // Check if the form was submitted
@@ -27,14 +27,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // User exists, now verify the password
         $row = $result->fetch_assoc();
         if ($password === $row['password']) { // Direct comparison since password is not hashed
-            // Login successful, redirect to index.html
-            header("Location: index.html");
-            exit();
+            // Login successful
+            echo json_encode(array("status" => "success", "message" => "Login successful"));
         } else {
-            echo "Invalid password.";
+            // Invalid password
+            echo json_encode(array("status" => "error", "message" => "Invalid password."));
         }
     } else {
-        echo "No user found with this email address.";
+        // No user found with this email
+        echo json_encode(array("status" => "error", "message" => "No user found with this email address."));
     }
 }
 
