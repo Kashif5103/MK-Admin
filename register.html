@@ -30,9 +30,9 @@
             <div class="card-body p-0">
                 <!-- Nested Row within Card Body -->
                 <div class="row">
-                    <div class="col-lg-5 d-none d-lg-block" style="background: url('img/cat.jpeg'); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
+                    <div class="col-lg-6 d-none d-lg-block" style="background: url('mk_logo\ \(2\).webp'); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
 
-                    <div class="col-lg-7">
+                    <div class="col-lg-6">
                         <div class="p-5">
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
@@ -42,7 +42,6 @@
                                     <input type="text" class="form-control form-control-user" name="name" id="exampleName" placeholder="Full Name" required>
                                 </div>
                                 <div class="form-group">
-                                   
                                     <input type="email" class="form-control form-control-user" id="email" name="email" placeholder="Email Address" required>
                                     <div id="email-status"></div> <!-- This element will show the email status -->
                                 </div>
@@ -55,9 +54,9 @@
                             
                             
                             <hr>
-                            <div class="text-center">
+                            <!-- <div class="text-center">
                                 <a class="small" href="forgot-password.html">Forgot Password?</a>
-                            </div>
+                            </div> -->
                             <div class="text-center">
                                 <a class="small" href="login.html">Already have an account? Login!</a>
                             </div>
@@ -68,6 +67,27 @@
         </div>
 
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#email').on('blur', function() { // Trigger when the user finishes typing (on blur event)
+        var email = $(this).val();
+
+        if (email != '') {
+            $.ajax({
+                url: 'check_email.php', // PHP file to check the email
+                method: 'POST',
+                data: { email: email },
+                success: function(response) {
+                    $('#email-status').html(response);
+                }
+            });
+        } else {
+            $('#email-status').html('');
+        }
+    });
+});
+</script>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>

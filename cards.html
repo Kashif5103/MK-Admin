@@ -19,77 +19,67 @@
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
-    <title>Ajax -- PHP -- Bootstrap -- CRUD</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!-- Custom CSS for header, form, details container, and buttons -->
     <style>
-        .header {
-            background-color: #5bc0de;
-            color: #fff;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 400px;
+            margin: 50px auto;
             padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
             text-align: center;
-            margin-bottom: 30px;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 24px;
+            color: #333;
         }
 
-        .form-container,
-        .details-container {
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        .form-group {
+            margin-bottom: 15px;
         }
 
-        .form-container {
-            background-color: #f0f9ff;
-            margin-bottom: 20px;
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
         }
 
-        .details-container {
-            background-color: #fff3cd;
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="password"],
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
 
-        .btn-primary {
-            margin: 10px;
-            background-color: #0275d8;
-            border-color: #0275d8;
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5cb85c;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
         }
 
-        .btn-primary:hover {
-            background-color: #025aa5;
-            border-color: #025aa5;
-        }
-
-        .btn-edit {
-            background-color: #ffc107;
-            /* Yellow for Edit */
-            color: white;
-        }
-
-        .btn-edit:hover {
-            background-color: #e0a800;
-        }
-
-        .btn-delete {
-            background-color: #dc3545;
-            /* Red for Delete */
-            color: white;
-        }
-
-        .btn-delete:hover {
-            background-color: #c82333;
-        }
-
-        .btn-edit,
-        .btn-delete {
-            display: inline-block;
-            margin-right: 5px;
-        }
-
-        .alert {
-            display: none;
-            margin-top: 20px;
+        button:hover {
+            background-color: #4cae4c;
         }
     </style>
 
@@ -105,33 +95,32 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">MK Admin <sup>2</sup></div>
+                <div class="sidebar-brand-text mx-3">MK UserNest</div>
             </a>
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item">
-                <a class="nav-link" href="index.html">
+            <li class="nav-item active">
+                <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="buttons.html">
+                    <i class="fas fa-user-circle"></i> <!-- User logo icon -->
+                    <span>User</span>
+                </a>
+            </li>
 
             <!-- Divider -->
-            <hr class="sidebar-divider">
 
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Interface
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseForm"
                     aria-expanded="true" aria-controls="collapseForm">
                     <i class="fas fa-fw fa-cog"></i>
@@ -141,7 +130,6 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Components:</h6>
                         <a class="collapse-item" href="buttons.html">Form</a>
-                        <!-- <a class="collapse-item" href="cards.html">Input</a> -->
                     </div>
                 </div>
             </li>
@@ -154,12 +142,11 @@
                 <div id="collapseInputs" class="collapse" aria-labelledby="headingInputs" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Components:</h6>
-                        <!-- <a class="collapse-item" href="buttons.html">Form</a> -->
                         <a class="collapse-item" href="cards.html">Input</a>
                     </div>
                 </div>
-            </li>
-            
+            </li> -->
+
 
             <!-- Nav Item - Utilities Collapse Menu -->
             <!-- <li class="nav-item">
@@ -184,30 +171,7 @@
             <hr class="sidebar-divider">
 
             <!-- Heading -->
-            <div class="sidebar-heading">
-                Addons
-            </div>
 
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="login.html">Login</a>
-                        <a class="collapse-item" href="register.html">Register</a>
-                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-                        <div class="collapse-divider"></div>
-                        <!-- <h6 class="collapse-header">Other Pages:</h6>
-                        <a class="collapse-item" href="404.html">404 Page</a>
-                        <a class="collapse-item" href="blank.html">Blank Page</a> -->
-                    </div>
-                </div>
-            </li>
 
             <!-- Nav Item - Charts -->
             <!-- <li class="nav-item">
@@ -217,10 +181,29 @@
             </li> -->
 
             <!-- Nav Item - Tables -->
+            <!-- Add Location Navigation Item -->
+            <div class="sidebar-heading">
+                Pages
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+
+
+
+
+            <!-- Nav Item - Tables -->
+            <!-- Add Location Navigation Item -->
             <li class="nav-item">
-                <a class="nav-link" href="tables.html">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Tables of User</span></a>
+                <a class="nav-link" href="login.html">
+                    <i class="fas fa-sign-in-alt"></i> <!-- Login icon -->
+                    <span>Login</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="register.html">
+                    <i class="fas fa-user-plus"></i> <!-- Register icon -->
+                    <span>Register</span>
+                </a>
             </li>
 
             <!-- Divider -->
@@ -233,14 +216,14 @@
 
         </ul>
         <!-- End of Sidebar -->
-         
+
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
             <!-- Main Content -->
             <div id="content">
-                
+
 
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -358,8 +341,7 @@
                                 </h6>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
-                                            alt="...">
+                                        <img class="rounded-circle" src="img/undraw_profile_1.svg" alt="...">
                                         <div class="status-indicator bg-success"></div>
                                     </div>
                                     <div class="font-weight-bold">
@@ -370,8 +352,7 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_2.svg"
-                                            alt="...">
+                                        <img class="rounded-circle" src="img/undraw_profile_2.svg" alt="...">
                                         <div class="status-indicator"></div>
                                     </div>
                                     <div>
@@ -382,8 +363,7 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_3.svg"
-                                            alt="...">
+                                        <img class="rounded-circle" src="img/undraw_profile_3.svg" alt="...">
                                         <div class="status-indicator bg-warning"></div>
                                     </div>
                                     <div>
@@ -414,9 +394,8 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                                <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Muhammad Kashif</span>
+                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -447,86 +426,264 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                 
-                <div class="container mt-5">
-                    <div class="header text-center mb-4">
-                        <h2>Enter -- The -- User</h2>
-                    </div>
+
+                <div class="container">
+                    <h2>Registration Form</h2>
+                    <form action="process_registration.php" method="POST" enctype="multipart/form-data">
+                        <!-- Full Name Field -->
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" pattern="[A-Za-z\s]+"
+                                title="Name should only contain letters and spaces." required>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                            <span id="email-status"></span>
+                        </div>
+                        <!-- Phone Number Field -->
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" name="phone" pattern="[0-9]{11}"
+                                title="Phone number should be 11 digits." required>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" minlength="8"
+                                   pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}:;.,]).{8,}$"
+                                   title="Password must be at least 8 characters long, contain at least one uppercase letter, and one special character."
+                                   required>
+                            <small id="password-error" style="color: red; display: none;">Password must be at least 8 characters long, contain at least one uppercase letter, and one special character.</small>
+                        </div>
+                        
+                        <!-- Profile Image Field -->
+                        <div class="form-group">
+                            <label for="image">Profile Image</label>
+                            <input type="file" id="image" name="image" accept=".jpg,.jpeg,.png"
+                                   title="Only JPG, JPEG, and PNG formats are allowed." required>
+                            <small id="image-error" style="color: red; display: none;">Invalid image format. Please upload a valid JPG, JPEG, or PNG file.</small>
+                        </div>
+
+                        <!-- Country Dropdown -->
+                        <div class="form-group">
+                            <label for="country">Country</label>
+                            <select id="country" name="country" required>
+                                <option value="">Select Country</option>
+                                <!-- Countries will be loaded dynamically -->
+                            </select>
+                        </div>
+
+                        <!-- State Dropdown -->
+                        <div class="form-group">
+                            <label for="state">State</label>
+                            <select id="state" name="state" required>
+                                <option value="">Select State</option>
+                                <!-- States will be loaded dynamically based on the selected country -->
+                            </select>
+                        </div>
+
+                        <!-- City Dropdown -->
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <select id="city" name="city" required>
+                                <option value="">Select City</option>
+                                <!-- Cities will be loaded dynamically based on the selected state -->
+                            </select>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="form-group">
+                            <button type="submit">Register</button>
+                        </div>
+                    </form>
+                </div>
+
+                <script>
+                    // JavaScript for dynamic dropdowns
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const countrySelect = document.getElementById('country');
+                        const stateSelect = document.getElementById('state');
+                        const citySelect = document.getElementById('city');
+
+                        // Load countries dynamically
+                        fetch('load_countries.php')
+                            .then(response => response.json())
+                            .then(data => {
+                                data.forEach(country => {
+                                    countrySelect.innerHTML += `<option value="${country.id}">${country.name}</option>`;
+                                });
+                            });
+
+                        // Load states based on selected country
+                        countrySelect.addEventListener('change', function () {
+                            const countryId = this.value;
+                            if (countryId) {
+                                fetch(`load_states.php?country_id=${countryId}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        stateSelect.innerHTML = '<option value="">Select State</option>';
+                                        data.forEach(state => {
+                                            stateSelect.innerHTML += `<option value="${state.id}">${state.name}</option>`;
+                                        });
+                                    });
+                            } else {
+                                stateSelect.innerHTML = '<option value="">Select State</option>';
+                                citySelect.innerHTML = '<option value="">Select City</option>';
+                            }
+                        });
+
+                        // Load cities based on selected state
+                        stateSelect.addEventListener('change', function () {
+                            const stateId = this.value;
+                            if (stateId) {
+                                fetch(`load_cities.php?state_id=${stateId}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        citySelect.innerHTML = '<option value="">Select City</option>';
+                                        data.forEach(city => {
+                                            citySelect.innerHTML += `<option value="${city.id}">${city.name}</option>`;
+                                        });
+                                    });
+                            } else {
+                                citySelect.innerHTML = '<option value="">Select City</option>';
+                            }
+                        });
+                    });
+
+                    // Client-side form validation
+                    document.querySelector('form').addEventListener('submit', function (event) {
+                        const phoneInput = document.getElementById('phone');
+                        const phonePattern = /^[0-9]{11}$/; // Example: 10-digit phone number
+                        if (!phonePattern.test(phoneInput.value)) {
+                            alert('Please enter a valid 11-digit phone number.');
+                            event.preventDefault();
+                        }
+                    });
+                </script>
+                <script>
+                    document.getElementById('password').addEventListener('input', function () {
+                        const password = this.value;
+                        const passwordError = document.getElementById('password-error');
                 
-                    <div class="row">
-                        <!-- Form container with inputs for name, email, and password -->
-                        <div class="col-md-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h4 class="m-0 font-weight-bold text-primary text-center">Add / Insert Data</h4>
-                                </div>
-                                <div class="card-body">
-                                    <!-- Form for adding new records -->
-                                    <form id="insert_form">
-                                        <div class="form-group">
-                                            <label for="name">Name:</label>
-                                            <input type="text" class="form-control" id="name" name="name" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="email">Email:</label>
-                                            <input type="email" class="form-control" id="email" name="email" required>
-                                            <div id="email-status"></div> <!-- This element will show the email status -->
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="password">Password:</label>
-                                            <input type="password" class="form-control" id="password" name="password" required>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                        // Regular expression to check for the required password pattern
+                        const pattern = /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}:;.,]).{8,}$/;
                 
-                                        <!-- Status message container to display success/error messages -->
-                                        <div id="status_message" class="alert mt-3" role="alert" style="display: none;"></div>
-                                    </form>
-                                </div>
+                        if (!pattern.test(password)) {
+                            passwordError.style.display = 'block';
+                        } else {
+                            passwordError.style.display = 'none';
+                        }
+                    });
+                </script>
+                
+                
+
+                <!-- End of Page Wrapper -->
+
+                <!-- Scroll to Top Button-->
+                <a class="scroll-to-top rounded" href="#page-top">
+                    <i class="fas fa-angle-up"></i>
+                </a>
+
+                <!-- Logout Modal-->
+                <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">Select "Logout" below if you are ready to end your current session.
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                <a class="btn btn-primary" href="login.html">Logout</a>
                             </div>
                         </div>
                     </div>
                 </div>
+                <script>
+                    $(document).ready(function () {
+                        $("#email").on('input', function () {
+                            var email = $(this).val();
 
-         
-    <!-- End of Page Wrapper -->
+                            if (email !== "") {
+                                $.ajax({
+                                    url: 'check_email_user.php',
+                                    method: 'POST',
+                                    data: { email: email },
+                                    success: function (response) {
+                                        if (response === "exists") {
+                                            $("#email-status").text("This email is already registered.").css("color", "red");
+                                            $("#email").css("border-color", "red");
+                                            $("#submit").attr("disabled", true); // Disable the submit button
+                                        } else {
+                                            $("#email-status").text("Email is available.").css("color", "green");
+                                            $("#email").css("border-color", "");
+                                            $("#submit").attr("disabled", false); // Enable the submit button
+                                        }
+                                    }
+                                });
+                            } else {
+                                $("#email-status").text("");
+                                $("#email").css("border-color", "");
+                                $("#submit").attr("disabled", false); // Enable the submit button
+                            }
+                        });
+                    });
+                </script>
+                <script>
+                    document.getElementById('image').addEventListener('change', function () {
+                        const file = this.files[0];
+                        const imageError = document.getElementById('image-error');
+                
+                        if (file) {
+                            const reader = new FileReader();
+                
+                            reader.onload = function (e) {
+                                const header = new Uint8Array(e.target.result).subarray(0, 4);
+                                let valid = false;
+                
+                                // Check the file header (magic number)
+                                const jpg = header[0] === 0xFF && header[1] === 0xD8 && header[2] === 0xFF;
+                                const png = header[0] === 0x89 && header[1] === 0x50 && header[2] === 0x4E && header[3] === 0x47;
+                
+                                if (jpg || png) {
+                                    valid = true;
+                                }
+                
+                                if (!valid) {
+                                    imageError.style.display = 'block';
+                                    this.value = "";  // Clear the file input
+                                } else {
+                                    imageError.style.display = 'none';
+                                }
+                            };
+                
+                            reader.readAsArrayBuffer(file);
+                        }
+                    });
+                </script>
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
+                <script src="vendor/jquery/jquery.min.js"></script>
+                <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
+                <!-- Core plugin JavaScript-->
+                <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
-    <!-- Include jQuery, Bootstrap, and custom AJAX scripts -->
-    <script src="js/jQuery.js"></script>
-    <script src="js/bootstrap.js"></script>
-    <script src="js/myajax.js"></script>
+                <!-- Custom scripts for all pages-->
+                <script src="js/sb-admin-2.min.js"></script>
+                <!-- Include jQuery, Bootstrap, and custom AJAX scripts -->
+                <script src="js/jQuery.js"></script>
+                <script src="js/bootstrap.js"></script>
+                <script src="js/myajax.js"></script>
 
 </body>
 

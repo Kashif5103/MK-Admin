@@ -1,47 +1,40 @@
 <?php
-// Database connection details
+// Include the database connection code
 $servername = "localhost";
-$username = "root"; // replace with your MySQL username
-$password = ""; // replace with your MySQL password
+$username = "root";
+$password = "";
 $dbname = "catmarketing";
 
-// Create a connection to the MySQL database
+// Create a connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check if the connection to the database was successful
+// Check the connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Check if the form was submitted
+// Check if form data is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Retrieve form data
-    $name = $conn->real_escape_string($_POST['name']);
-    $email = $conn->real_escape_string($_POST['email']);
-    $password = $conn->real_escape_string($_POST['password']);
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $password = password_hash($_POST['password'], PASSWORD_BCRYPT); // Hashing the password
 
-    // Check if the email already exists in the database
-    $checkEmailQuery = "SELECT id FROM Student WHERE email = '$email'";
-    $result = $conn->query($checkEmailQuery);
+    // Prepare and bind
+    $stmt = $conn->prepare("INSERT INTO admin (name, email, password) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $name, $email, $password);
 
-    if ($result->num_rows > 0) {
-        // If email already exists, send a response
-        echo "Error: Email already registered!";
+    // Execute the statement
+    if ($stmt->execute()) {
+        header("Location: login.html"); // Redirect to the user table after successful update
+        exit();
+        // You can redirect the user to a success page or login page here
     } else {
-        // If email is available, insert new user into the database
-        $sql = "INSERT INTO Student (name, email, password) VALUES ('$name', '$email', '$password')";
-
-        if ($conn->query($sql) === TRUE) {
-            // If registration is successful, redirect to login.html
-            echo "Registration successful!";
-            header("Location: login.html");
-            exit();
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
-        }
+        echo "Error: " . $stmt->error;
     }
+
+    // Close statement and connection
+    $stmt->close();
 }
 
-// Close the database connection
 $conn->close();
 ?>

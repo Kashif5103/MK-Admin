@@ -7724,6 +7724,7 @@ button.bg-dark:focus {
 .mt-3,
 .my-3 {
   margin-top: 1rem !important;
+  margin-left: 1rem;
 }
 
 .mr-3,

@@ -36,7 +36,7 @@
                         <!-- Nested Row within Card Body -->
                         <div class="row">
                             <div class="col-lg-6 d-none d-lg-block"
-                                style="background: url('img/cat.jpeg'); background-position: center; background-size: cover; background-repeat: no-repeat;">
+                                style="background: url('mk_logo\ \(2\).webp'); background-position: center; background-size: cover; background-repeat: no-repeat;">
                             </div>
 
                             <div class="col-lg-6">
@@ -64,19 +64,21 @@
                                         </div>
                                         <button type="submit" class="btn btn-primary btn-user btn-block">Login</button>
                                     </form>
+                                    <div class="text-center">
+                                        <a class="small" href="register.html">Create an Account!</a>
+                                    </div>
                                     <div id="status_message" class="alert" role="alert" style="display: none;"></div>
                                     <!-- Container for status messages -->
                                 </div>
+                                
                             </div>
 
 
                             <hr>
-                            <div class="text-center">
+                            <!-- <div class="text-center">
                                 <a class="small" href="forgot-password.html">Forgot Password?</a>
-                            </div>
-                            <div class="text-center">
-                                <a class="small" href="register.html">Create an Account!</a>
-                            </div>
+                            </div> -->
+                            
                         </div>
                     </div>
                 </div>
@@ -118,7 +120,7 @@
                     success: function (response) {
                         if (response.status === 'success') {
                             // If login is successful, redirect to index.php
-                            window.location.href = 'index.html';
+                            window.location.href = 'index.php';
                         } else {
                             // If there is an error, show the error message
                             $('#status_message').removeClass('alert-success').addClass('alert-danger').html(response.message).show();
@@ -131,6 +133,38 @@
                 });
             });
         });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Handle login form submission
+            $('#login_form').on('submit', function (e) {
+                e.preventDefault(); // Prevent the default form submission
+
+                let formData = $(this).serialize(); // Serialize form data for sending via AJAX
+
+                // AJAX request to login
+                $.ajax({
+                    url: 'login.php', // The URL for the login request
+                    type: 'POST', // The HTTP method for the request
+                    data: formData, // The serialized form data
+                    dataType: 'json', // Expecting JSON response
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            // If login is successful, redirect to buttons.html
+                            window.location.href = 'buttons.html';
+                        } else {
+                            // If there is an error, show the error message
+                            $('#status_message').removeClass('alert-success').addClass('alert-danger').html(response.message).show();
+                        }
+                    },
+                    error: function () {
+                        // If there's an error during the request, show a generic error message
+                        $('#status_message').removeClass('alert-success').addClass('alert-danger').html('Failed to process login request.').show();
+                    }
+                });
+            });
+        });
+
     </script>
 
     <script src="js/myajax.js"></script>

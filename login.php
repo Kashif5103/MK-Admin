@@ -1,44 +1,54 @@
 <?php
-// Database connection details
+session_start(); // Start session management
+
+// Include database connection
 $servername = "localhost";
-$username = "root"; // replace with your MySQL username
-$password = ""; // replace with your MySQL password
+$username = "root";
+$password = "";
 $dbname = "catmarketing";
 
-// Create a connection to the MySQL database
+// Create a connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check if the connection to the database was successful
+// Check the connection
 if ($conn->connect_error) {
-    die(json_encode(array("status" => "error", "message" => "Connection failed: " . $conn->connect_error)));
+    die(json_encode(['status' => 'error', 'message' => 'Database connection failed.']));
 }
 
-// Check if the form was submitted
+// Check if form data is submitted via POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Retrieve form data
-    $email = $conn->real_escape_string($_POST['email']);
-    $password = $conn->real_escape_string($_POST['password']);
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-    // Prepare and execute the SQL statement to fetch the user data
-    $sql = "SELECT * FROM Student WHERE email = '$email'";
-    $result = $conn->query($sql);
+    // Prepare and execute the SQL query to fetch user details
+    $stmt = $conn->prepare("SELECT id, name, password FROM admin WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+    
+    // Check if a user with this email exists
+    if ($stmt->num_rows > 0) {
+        $stmt->bind_result($id, $name, $hashed_password);
+        $stmt->fetch();
 
-    if ($result->num_rows > 0) {
-        // User exists, now verify the password
-        $row = $result->fetch_assoc();
-        if ($password === $row['password']) { // Direct comparison since password is not hashed
-            // Login successful
-            echo json_encode(array("status" => "success", "message" => "Login successful"));
+        // Verify the password
+        if (password_verify($password, $hashed_password)) {
+            // Password is correct, set session variables
+            $_SESSION['user_id'] = $id;
+            $_SESSION['user_name'] = $name;
+            echo json_encode(['status' => 'success']);
         } else {
-            // Invalid password
-            echo json_encode(array("status" => "error", "message" => "Invalid password."));
+            // Password is incorrect
+            echo json_encode(['status' => 'error', 'message' => 'Incorrect password.']);
         }
     } else {
         // No user found with this email
-        echo json_encode(array("status" => "error", "message" => "No user found with this email address."));
+        echo json_encode(['status' => 'error', 'message' => 'No account found with that email address.']);
     }
+
+    // Close statement and connection
+    $stmt->close();
 }
 
-// Close the database connection
 $conn->close();
 ?>
