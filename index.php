@@ -31,12 +31,14 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
+                <div class="sidebar-brand-icon rotate-n-0">
+                    <img src="mk_logo%20(2).webp" alt="Logo" style="width: 60px; height: 60px;">
                 </div>
                 <div class="sidebar-brand-text mx-3">MK UserNest</div>
             </a>
+
+
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
@@ -72,11 +74,11 @@
                 
             </li> -->
 
-                        <!--start company nav-->
+            <!--start company nav-->
 
             <!-- Nav Item - Pages Collapse Menu -->
-          
-            
+
+
             <!-- <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseForm"
                     aria-expanded="true" aria-controls="collapseForm">
@@ -104,8 +106,8 @@
                 </div>
             </li>
              -->
-      
-            
+
+
 
             <!-- Divider -->
             <hr class="sidebar-divider">
@@ -116,9 +118,9 @@
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
-           
 
-          
+
+
 
             <!-- Nav Item - Tables -->
             <!-- Add Location Navigation Item -->
@@ -134,9 +136,9 @@
                     <span>Register</span>
                 </a>
             </li>
-            
-            
-          
+
+
+
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
@@ -145,7 +147,7 @@
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
-          
+
         </ul>
         <!-- End of Sidebar -->
 
@@ -329,7 +331,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Muhammad Kashif</span>
                                 <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                    src="img/M kashif.jpeg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -391,7 +393,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Earnings (Monthly) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-success shadow h-100 py-2">
@@ -462,11 +464,11 @@
 
                     <!-- <div class="row"> -->
 
-                        <!-- Area Chart -->
-                        <!-- <div class="col-xl-8 col-lg-7">
+                    <!-- Area Chart -->
+                    <!-- <div class="col-xl-8 col-lg-7">
                             <div class="card shadow mb-4"> -->
-                                <!-- Card Header - Dropdown -->
-                                <!-- <div
+                    <!-- Card Header - Dropdown -->
+                    <!-- <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
                                     <div class="dropdown no-arrow">
@@ -484,8 +486,8 @@
                                         </div>
                                     </div>
                                 </div> -->
-                                <!-- Card Body -->
-                                <!-- <div class="card-body">
+                    <!-- Card Body -->
+                    <!-- <div class="card-body">
                                     <div class="chart-area">
                                         <canvas id="myAreaChart"></canvas>
                                     </div>
@@ -493,13 +495,13 @@
                             </div>
                         </div> -->
 
-                        <!-- Pie Chart -->
-                        <!-- <div class="col-xl-4 col-lg-5">
+                    <!-- Pie Chart -->
+                    <!-- <div class="col-xl-4 col-lg-5">
                             <div class="card shadow mb-4"> -->
-                                <!-- Card Header - Dropdown -->
-                              
-                                <!-- Card Body -->
-                                <!-- <div class="card-body">
+                    <!-- Card Header - Dropdown -->
+
+                    <!-- Card Body -->
+                    <!-- <div class="card-body">
                                     <div class="chart-pie pt-4 pb-2">
                                         <canvas id="myPieChart"></canvas>
                                     </div>
@@ -522,11 +524,11 @@
                     <!-- Content Row -->
                     <!-- <div class="row"> -->
 
-                        <!-- Content Column -->
-                        <!-- <div class="col-lg-6 mb-4"> -->
+                    <!-- Content Column -->
+                    <!-- <div class="col-lg-6 mb-4"> -->
 
-                            <!-- Project Card Example -->
-                            <!-- <div class="card shadow mb-4">
+                    <!-- Project Card Example -->
+                    <!-- <div class="card shadow mb-4">
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
                                 </div>
@@ -564,8 +566,8 @@
                                 </div>
                             </div> -->
 
-                            <!-- Color System -->
-                            <!-- <div class="row">
+                    <!-- Color System -->
+                    <!-- <div class="row">
                                 <div class="col-lg-6 mb-4">
                                     <div class="card bg-primary text-white shadow">
                                         <div class="card-body">
@@ -636,8 +638,8 @@
 
                         <div class="col-lg-6 mb-4"> -->
 
-                            <!-- Illustrations -->
-                            <!-- <div class="card shadow mb-4">
+                    <!-- Illustrations -->
+                    <!-- <div class="card shadow mb-4">
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
                                 </div>
@@ -655,8 +657,8 @@
                                 </div>
                             </div> -->
 
-                            <!-- Approach -->
-                            <!-- <div class="card shadow mb-4">
+                    <!-- Approach -->
+                    <!-- <div class="card shadow mb-4">
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
                                 </div>
@@ -673,69 +675,69 @@
                     </div>
 
                 </div> -->
-                <!-- /.container-fluid -->
+                    <!-- /.container-fluid -->
 
-            <!-- </div> -->
-            <!-- End of Main Content -->
+                    <!-- </div> -->
+                    <!-- End of Main Content -->
 
-            <!-- Footer -->
-            <!-- <footer class="sticky-footer bg-white">
+                    <!-- Footer -->
+                    <!-- <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>Copyright &copy; Your Website 2024</span>
                     </div>
                 </div>
             </footer> -->
-            <!-- End of Footer -->
+                    <!-- End of Footer -->
 
-        </div>
-        <!-- End of Content Wrapper -->
-
-    </div>
-    <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
                 </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                <!-- End of Content Wrapper -->
+
+            </div>
+            <!-- End of Page Wrapper -->
+
+            <!-- Scroll to Top Button-->
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+            </a>
+
+            <!-- Logout Modal-->
+            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                            <a class="btn btn-primary" href="login.html">Logout</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+            <!-- Bootstrap core JavaScript-->
+            <script src="vendor/jquery/jquery.min.js"></script>
+            <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+            <!-- Core plugin JavaScript-->
+            <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
-    <script src="js/myajax.js"></script>
+            <!-- Custom scripts for all pages-->
+            <script src="js/sb-admin-2.min.js"></script>
+            <script src="js/myajax.js"></script>
 
-    <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
+            <!-- Page level plugins -->
+            <script src="vendor/chart.js/Chart.min.js"></script>
 
-    <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
+            <!-- Page level custom scripts -->
+            <script src="js/demo/chart-area-demo.js"></script>
+            <script src="js/demo/chart-pie-demo.js"></script>
 
 </body>
 

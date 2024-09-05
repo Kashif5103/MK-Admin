@@ -11,6 +11,12 @@
 
     <title>MK Admin 2 - Buttons</title>
 
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Remix Icon -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
@@ -55,13 +61,13 @@
         /* Increased width for the action column */
         .btn-edit {
             background-color: #007bff;
-            color: white;
+            color: rgb(249, 245, 245);
         }
 
         /* Blue for Edit */
         .btn-delete {
             background-color: #dc3545;
-            color: white;
+            color: rgb(229, 224, 224);
         }
 
         /* Red for Delete */
@@ -79,8 +85,8 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                <div class="sidebar-brand-icon rotate-n-0">
+                    <img src="mk_logo%20(2).webp" alt="Logo" style="width: 60px; height: 60px;">
                 </div>
                 <div class="sidebar-brand-text mx-3">MK UserNest</div>
             </a>
@@ -102,7 +108,7 @@
                 </a>
             </li>
             <!-- Divider -->
-           
+
             <!-- <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseForm"
                     aria-expanded="true" aria-controls="collapseForm">
@@ -154,7 +160,7 @@
             <hr class="sidebar-divider">
 
             <!-- Heading -->
-          
+
 
             <!-- Nav Item - Charts -->
             <!-- <li class="nav-item">
@@ -170,9 +176,9 @@
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
-           
 
-          
+
+
 
             <!-- Nav Item - Tables -->
             <!-- Add Location Navigation Item -->
@@ -188,7 +194,7 @@
                     <span>Register</span>
                 </a>
             </li>
-            
+
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
@@ -376,7 +382,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Muhammad Kashif</span>
-                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                <img class="img-profile rounded-circle" src="img/M kashif.jpeg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -473,10 +479,15 @@
                                     <td>${user.country}</td>
                                     <td>${user.state}</td>
                                     <td>${user.city}</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-edit" onclick="editUser(${user.id})">Edit</button>
-                                        <button class="btn btn-sm btn-delete" onclick="deleteUser(${user.id})">Delete</button>
-                                    </td>
+                                  <td>
+    <button class="btn btn-sm btn-edit" onclick="editUser(${user.id})">
+        <i class="ri-file-edit-fill"></i> Edit
+    </button>
+    <button class="btn btn-sm btn-delete" onclick="deleteUser(${user.id})">
+        <i class="ri-delete-bin-5-fill"></i> Delete
+    </button>
+</td>
+
                                 </tr>
                             `;
                                 });

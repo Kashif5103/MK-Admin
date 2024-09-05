@@ -96,8 +96,8 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                <div class="sidebar-brand-icon rotate-n-0">
+                    <img src="mk_logo%20(2).webp" alt="Logo" style="width: 60px; height: 60px;">
                 </div>
                 <div class="sidebar-brand-text mx-3">MK UserNest</div>
             </a>
@@ -395,7 +395,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Muhammad Kashif</span>
-                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                <img class="img-profile rounded-circle" src="img/M kashif.jpeg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -466,6 +466,8 @@
                             <input type="file" id="image" name="image" accept=".jpg,.jpeg,.png"
                                    title="Only JPG, JPEG, and PNG formats are allowed." required>
                             <small id="image-error" style="color: red; display: none;">Invalid image format. Please upload a valid JPG, JPEG, or PNG file.</small>
+                            <small id="size-error" style="color: red; display: none;">Image size should not exceed 2 MB.</small>
+                            <small id="dimension-error" style="color: red; display: none;">Invalid image dimensions. Please upload an image with standard dimensions.</small>
                         </div>
 
                         <!-- Country Dropdown -->
@@ -639,39 +641,71 @@
                         });
                     });
                 </script>
-                <script>
-                    document.getElementById('image').addEventListener('change', function () {
-                        const file = this.files[0];
-                        const imageError = document.getElementById('image-error');
+                <!-- Adding the image Script code -->
+               <script>
+                document.getElementById('image').addEventListener('change', function () {
+                    const file = this.files[0];
+                    const imageError = document.getElementById('image-error');
+                    const sizeError = document.getElementById('size-error');
+                    const dimensionError = document.getElementById('dimension-error');
                 
-                        if (file) {
-                            const reader = new FileReader();
+                    // Reset error messages
+                    imageError.style.display = 'none';
+                    sizeError.style.display = 'none';
+                    dimensionError.style.display = 'none';
                 
-                            reader.onload = function (e) {
-                                const header = new Uint8Array(e.target.result).subarray(0, 4);
-                                let valid = false;
+                    if (file) {
+                        const reader = new FileReader();
                 
-                                // Check the file header (magic number)
-                                const jpg = header[0] === 0xFF && header[1] === 0xD8 && header[2] === 0xFF;
-                                const png = header[0] === 0x89 && header[1] === 0x50 && header[2] === 0x4E && header[3] === 0x47;
-                
-                                if (jpg || png) {
-                                    valid = true;
-                                }
-                
-                                if (!valid) {
-                                    imageError.style.display = 'block';
-                                    this.value = "";  // Clear the file input
-                                } else {
-                                    imageError.style.display = 'none';
-                                }
-                            };
-                
-                            reader.readAsArrayBuffer(file);
+                        // Validate file size (2 MB limit)
+                        const maxSize = 2 * 1024 * 1024; // 2MB
+                        if (file.size > maxSize) {
+                            sizeError.style.display = 'block';
+                            this.value = '';  // Clear the file input
+                            return;
                         }
-                    });
-                </script>
-
+                
+                        // Validate file header (magic number)
+                        reader.onload = function (e) {
+                            const header = new Uint8Array(e.target.result).subarray(0, 4);
+                            let valid = false;
+                
+                            const jpg = header[0] === 0xFF && header[1] === 0xD8 && header[2] === 0xFF;
+                            const png = header[0] === 0x89 && header[1] === 0x50 && header[2] === 0x4E && header[3] === 0x47;
+                
+                            if (jpg || png) {
+                                valid = true;
+                            }
+                
+                            if (!valid) {
+                                imageError.style.display = 'block';
+                                document.getElementById('image').value = '';  // Clear the file input
+                                return;
+                            } else {
+                                imageError.style.display = 'none';
+                
+                                // Validate image dimensions
+                                const img = new Image();
+                                img.src = URL.createObjectURL(file);
+                
+                                img.onload = function () {
+                                    const maxWidth = 1024;  // Example standard width
+                                    const maxHeight = 768;  // Example standard height
+                
+                                    if (img.width > maxWidth || img.height > maxHeight) {
+                                        dimensionError.style.display = 'block';
+                                        document.getElementById('image').value = '';  // Clear the file input
+                                    } else {
+                                        dimensionError.style.display = 'none';
+                                    }
+                                };
+                            }
+                        };
+                
+                        reader.readAsArrayBuffer(file);
+                    }
+                });
+                </script
                 <script src="vendor/jquery/jquery.min.js"></script>
                 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
