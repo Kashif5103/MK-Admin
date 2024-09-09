@@ -5,7 +5,7 @@ session_start(); // Start session management
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "catmarketing";
+$dbname = "web_info";
 
 // Create a connection
 $conn = new mysqli($servername, $username, $password, $dbname);

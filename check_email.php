@@ -5,7 +5,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "catmarketing";
+$dbname = "web_info";
 
 // Establish a connection to the database
 $conn = new mysqli($servername, $username, $password, $dbname);

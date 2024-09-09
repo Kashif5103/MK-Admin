@@ -3,7 +3,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "catmarketing";
+$dbname = "web_info";
 
 // Establish a connection to the MySQL database
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 }
 
 // Query to count the total number of users
-$sql = "SELECT COUNT(*) AS total_users FROM users";
+$sql = "SELECT COUNT(*) AS total_users FROM user_info";
 $result = $conn->query($sql);
 
 if ($result && $result->num_rows > 0) {
