@@ -1,54 +1,49 @@
 <?php
-session_start(); // Start session management
+// Start session to store user login information
+session_start();
 
 // Include database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "web_info";
+require 'connection.php'; // Assuming you have a file for database connection
 
-// Create a connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+$response = array();
 
-// Check the connection
-if ($conn->connect_error) {
-    die(json_encode(['status' => 'error', 'message' => 'Database connection failed.']));
-}
-
-// Check if form data is submitted via POST
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    // Prepare and execute the SQL query to fetch user details
-    $stmt = $conn->prepare("SELECT id, name, password FROM admin WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->store_result();
+// Check if form is submitted via POST method
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Retrieve email and password from the POST request
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $password = mysqli_real_escape_string($conn, $_POST['password']);
     
-    // Check if a user with this email exists
-    if ($stmt->num_rows > 0) {
-        $stmt->bind_result($id, $name, $hashed_password);
-        $stmt->fetch();
-
+    // Query the database to check if the email exists
+    $query = "SELECT * FROM admin WHERE email = '$email' LIMIT 1"; // Change 'users' to your table name
+    $result = mysqli_query($conn, $query);
+    
+    if ($result && mysqli_num_rows($result) > 0) {
+        $user = mysqli_fetch_assoc($result);
+        
         // Verify the password
-        if (password_verify($password, $hashed_password)) {
-            // Password is correct, set session variables
-            $_SESSION['user_id'] = $id;
-            $_SESSION['user_name'] = $name;
-            echo json_encode(['status' => 'success']);
+        if (password_verify($password, $user['password'])) {
+            // Set session for the logged-in user
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['email'] = $user['email'];
+            
+            // Return success response
+            $response['status'] = 'success';
+            $response['message'] = 'Login successful';
         } else {
-            // Password is incorrect
-            echo json_encode(['status' => 'error', 'message' => 'Incorrect password.']);
+            // Password doesn't match
+            $response['status'] = 'error';
+            $response['message'] = 'Incorrect password';
         }
     } else {
-        // No user found with this email
-        echo json_encode(['status' => 'error', 'message' => 'No account found with that email address.']);
+        // Email doesn't exist
+        $response['status'] = 'error';
+        $response['message'] = 'Email not found';
     }
-
-    // Close statement and connection
-    $stmt->close();
+    
+    // Close database connection
+    mysqli_close($conn);
+    
+    // Return JSON response
+    echo json_encode($response);
 }
-
-$conn->close();
 ?>
