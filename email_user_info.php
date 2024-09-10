@@ -24,7 +24,7 @@ if (isset($_POST['email'])) {
 
     // Output whether the email exists or is available
     if ($result->num_rows > 0) {
-        echo "exists";
+        echo "Already used";
     } else {
         echo "available";
     }

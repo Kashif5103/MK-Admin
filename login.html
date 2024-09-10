@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -13,9 +12,7 @@
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
@@ -23,21 +20,15 @@
 </head>
 
 <body class="bg-gradient-primary">
-
     <div class="container">
-
         <!-- Outer Row -->
         <div class="row justify-content-center">
-
             <div class="col-xl-10 col-lg-12 col-md-9">
-
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block"
-                                style="background: url('mk_logo\ \(2\).webp'); background-position: center; background-size: cover; background-repeat: no-repeat;">
-                            </div>
+                            <div class="col-lg-6 d-none d-lg-block" style="background: url('mk_logo\ \(2\).webp'); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
 
                             <div class="col-lg-6">
                                 <div class="p-5">
@@ -46,20 +37,15 @@
                                     </div>
                                     <form id="login_form" class="user" method="POST" action="login.php">
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user" name="email"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Enter Email Address..." required>
+                                            <input type="email" class="form-control form-control-user" name="email" placeholder="Enter Email Address..." required>
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user"
-                                                name="password" id="exampleInputPassword" placeholder="Password"
-                                                required>
+                                            <input type="password" class="form-control form-control-user" name="password" placeholder="Password" required>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" class="custom-control-input" id="customCheck">
-                                                <label class="custom-control-label" for="customCheck">Remember
-                                                    Me</label>
+                                                <label class="custom-control-label" for="customCheck">Remember Me</label>
                                             </div>
                                         </div>
                                         <button type="submit" class="btn btn-primary btn-user btn-block">Login</button>
@@ -68,138 +54,50 @@
                                         <a class="small" href="register.html">Create an Account!</a>
                                     </div>
                                     <div id="status_message" class="alert" role="alert" style="display: none;"></div>
-                                    <!-- Container for status messages -->
                                 </div>
-                                
                             </div>
-
-
-                            <hr>
-                            <!-- <div class="text-center">
-                                <a class="small" href="forgot-password.html">Forgot Password?</a>
-                            </div> -->
-                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
-    </div>
-
-    </div>
-    <script>
-            $(document).ready(function () {
-        // Handle login form submission
-        $('#login_form').on('submit', function (e) {
-            e.preventDefault(); // Prevent the default form submission
-
-            let formData = $(this).serialize(); // Serialize form data for sending via AJAX
-
-            // AJAX request to login
-            $.ajax({
-                url: 'login.php', // The URL for the login request
-                type: 'POST', // The HTTP method for the request
-                data: formData, // The serialized form data
-                dataType: 'json', // Expecting JSON response
-                success: function (response) {
-                    if (response.status === 'success') {
-                        // If login is successful, redirect to index.php
-                        window.location.href = 'index.php';
-                    } else {
-                        // If there is an error, show the error message
-                        $('#status_message').removeClass('alert-success').addClass('alert-danger').html(response.message).show();
-                    }
-                },
-                error: function () {
-                    // If there's an error during the request, show a generic error message
-                    $('#status_message').removeClass('alert-success').addClass('alert-danger').html('Failed to process login request.').show();
-                }
-            });
-        });
-    });
-    </script>
-
-    <!-- Bootstrap core JavaScript-->
+    <!-- jQuery and Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
-    <!-- Include jQuery, Bootstrap, and custom AJAX scripts -->
-    <script src="js/jQuery.js"></script>
-    <script src="js/bootstrap.js"></script>
+
+    <!-- AJAX for login form -->
     <script>
         $(document).ready(function () {
-            // Handle login form submission
             $('#login_form').on('submit', function (e) {
-                e.preventDefault(); // Prevent the default form submission
+                e.preventDefault(); // Prevent default form submission
 
-                let formData = $(this).serialize(); // Serialize form data for sending via AJAX
+                let formData = $(this).serialize(); // Serialize form data
 
-                // AJAX request to login
+                // AJAX request
                 $.ajax({
-                    url: 'login.php', // The URL for the login request
-                    type: 'POST', // The HTTP method for the request
-                    data: formData, // The serialized form data
-                    dataType: 'json', // Expecting JSON response
+                    url: 'login.php',
+                    type: 'POST',
+                    data: formData,
+                    dataType: 'json',
                     success: function (response) {
                         if (response.status === 'success') {
-                            // If login is successful, redirect to index.php
-                            window.location.href = 'index.php';
+                            window.location.href = 'index.php'; // Redirect to index.html on success
                         } else {
-                            // If there is an error, show the error message
                             $('#status_message').removeClass('alert-success').addClass('alert-danger').html(response.message).show();
                         }
                     },
                     error: function () {
-                        // If there's an error during the request, show a generic error message
                         $('#status_message').removeClass('alert-success').addClass('alert-danger').html('Failed to process login request.').show();
                     }
                 });
             });
         });
     </script>
-    <script>
-        $(document).ready(function () {
-            // Handle login form submission
-            $('#login_form').on('submit', function (e) {
-                e.preventDefault(); // Prevent the default form submission
-
-                let formData = $(this).serialize(); // Serialize form data for sending via AJAX
-
-                // AJAX request to login
-                $.ajax({
-                    url: 'login.php', // The URL for the login request
-                    type: 'POST', // The HTTP method for the request
-                    data: formData, // The serialized form data
-                    dataType: 'json', // Expecting JSON response
-                    success: function (response) {
-                        if (response.status === 'success') {
-                            // If login is successful, redirect to buttons.html
-                            window.location.href = 'buttons.html';
-                        } else {
-                            // If there is an error, show the error message
-                            $('#status_message').removeClass('alert-success').addClass('alert-danger').html(response.message).show();
-                        }
-                    },
-                    error: function () {
-                        // If there's an error during the request, show a generic error message
-                        $('#status_message').removeClass('alert-success').addClass('alert-danger').html('Failed to process login request.').show();
-                    }
-                });
-            });
-        });
-
-    </script>
-
-    <script src="js/myajax.js"></script>
-
 </body>
 
 </html>

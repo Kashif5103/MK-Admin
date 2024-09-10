@@ -1,3 +1,73 @@
+<?php
+ob_start(); // Start output buffering
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "web_info";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Retrieve and validate the `id` parameter from the URL
+$website_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+// Debugging: Display the `id` value
+// echo "Website ID from URL: " . $website_id . "<br>";
+
+if ($website_id <= 0) {
+    die("Invalid website ID provided. Please go back and try again.");
+}
+
+// Ensure the website ID exists
+$website_check_sql = "SELECT id FROM website_info WHERE id = ?";
+$website_check_stmt = $conn->prepare($website_check_sql);
+$website_check_stmt->bind_param("i", $website_id);
+$website_check_stmt->execute();
+$website_check_result = $website_check_stmt->get_result();
+
+if ($website_check_result->num_rows === 0) {
+    die("Invalid website ID: No matching record found.");
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve and sanitize form data
+    $user_name = isset($_POST['user_name']) ? $conn->real_escape_string($_POST['user_name']) : '';
+    $email = isset($_POST['email']) ? $conn->real_escape_string($_POST['email']) : '';
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
+
+    if ($user_name && $email && $password) {
+        // Hash the password for security
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+        // Insert new user into the database
+        $insert_sql = "INSERT INTO user_info (user_name, email, password, website_id) VALUES (?, ?, ?, ?)";
+        $stmt = $conn->prepare($insert_sql);
+        $stmt->bind_param("sssi", $user_name, $email, $hashed_password, $website_id);
+
+        if ($stmt->execute()) {
+            ob_end_clean(); // Clear output buffer
+            header("Location: cards.php?id=$website_id");
+            exit();
+        } else {
+            echo "Error adding user: " . $stmt->error;
+        }
+
+        $stmt->close();
+    } else {
+        echo "Required form fields are missing.";
+    }
+}
+
+$conn->close();
+ob_end_flush(); // End output buffering
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,13 +79,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>MK Admin 2 - Buttons</title>
-
-    <!-- Bootstrap -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Remix Icon -->
-    <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
-
+    <title>MK Admin 2 - Cards</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -25,10 +89,7 @@
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
-    <!-- Include Bootstrap CSS for styling -->
-    <link rel="stylesheet" href="css/bootstrap.css">
-
-    <!-- Page title -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!-- Custom CSS for header, form, details container, and buttons -->
     <style>
@@ -40,7 +101,7 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 800px;
             margin: 50px auto;
             padding: 20px;
             background-color: #ffffff;
@@ -48,38 +109,98 @@
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
 
-        .card-header {
+        h2 {
             text-align: center;
             color: #333;
         }
 
-        .table-responsive {
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
             margin-top: 20px;
         }
 
-        .action-col {
-            text-align: center;
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
         }
 
-        .custom-button {
-            margin-right: 20px;
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
         }
 
-        .btn-edit {
-            background-color: #17a2b8;
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-add-user {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
             color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            margin: 20px 0;
         }
 
-        .btn-delete {
-            background-color: #dc3545;
-            color: white;
+        .btn-add-user:hover {
+            background-color: #007bff;
         }
 
-        .btn-sm {
-            padding: 5px 10px;
-            margin-right: 5px;
+        /* Style for error message */
+        #password-error {
+            color: red;
+            display: none;
+            font-size: 0.9em;
+        }
+        #username-error {
+            color: red;
+            display: none;
+            font-size: 0.9em;
         }
     </style>
+
 
 </head>
 
@@ -98,7 +219,6 @@
                 </div>
                 <div class="sidebar-brand-text mx-3">MK UserNest</div>
             </a>
-            </a>
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
@@ -115,54 +235,7 @@
                     <span>User</span>
                 </a>
             </li>
-            <!-- Divider -->
 
-            <!-- <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseForm"
-                    aria-expanded="true" aria-controls="collapseForm">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Form</span>
-                </a>
-                <div id="collapseForm" class="collapse" aria-labelledby="headingForm" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="buttons.html">Form</a>
-                    </div>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseInputs"
-                    aria-expanded="true" aria-controls="collapseInputs">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Inputs</span>
-                </a>
-                <div id="collapseInputs" class="collapse" aria-labelledby="headingInputs" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="cards.html">Input</a>
-                    </div>
-                </div>
-            </li> -->
-
-
-            <!-- Nav Item - Utilities Collapse Menu -->
-            <!-- <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                    aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Utilities</span>
-                </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Utilities:</h6>
-                        <a class="collapse-item" href="utilities-color.html">Colors</a>
-                        <a class="collapse-item" href="utilities-border.html">Borders</a>
-                        <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                        <a class="collapse-item" href="utilities-other.html">Other</a>
-                    </div>
-                </div>
-            </li> -->
 
             <!-- Divider -->
             <hr class="sidebar-divider">
@@ -214,11 +287,13 @@
         </ul>
         <!-- End of Sidebar -->
 
+
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
             <!-- Main Content -->
             <div id="content">
+
 
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -421,121 +496,46 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <!-- <div class="container-fluid"> -->
 
-                <!-- Page Heading -->
-                <!-- <h1 class="h3 mb-4 text-gray-800">Buttons</h1> -->
-
-                <!-- <div class="row"> -->
-
-                <!-- Main container and header for the application -->
                 <div class="container mt-5">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h3 class="m-0 font-weight-bold text-primary text-center">Website Details</h3>
+                            <h3 class="m-0 font-weight-bold text-primary text-center">Add New User</h3>
                         </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary mt-3 custom-button"
-                                onclick="window.location.href='add_web.php';">Add Website</button>
-                        </div>
-
-
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="userTable" width="100%" cellspacing="0">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Website Name</th>
-                                            <th>Domain Name</th>
-                                            <th>Hosting Company</th>
-                                            <th>Country</th>
-                                            <th class="action-col">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="user_table">
-                                        <!-- User data will be appended here dynamically -->
-                                    </tbody>
-                                </table>
-                            </div>
+                            <form method="POST" action="user.php?id=<?php echo htmlspecialchars($website_id); ?>">
+                                <div class="form-group">
+                                    <label for="user_name">User Name:</label>
+                                    <input type="text" class="form-control" id="user_name" name="user_name" required>
+                                    <div id="username-error">User name must only contain alphabetic characters.</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email">User email:</label>
+                                    <input type="email" class="form-control form-control-user" id="email" name="email" required>
+                                    <div id="email-status"></div> <!-- This element will show the email status -->
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password">Password:</label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                    <div id="password-error">Password must be at least 8 characters long, include an uppercase letter, and a special character.</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">Add User</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
 
-                <script>
-                    // Function to fetch and display user data
-                    function loadUserData() {
-                        fetch('fetch_web.php')  // Fetch data from the PHP file
-                            .then(response => response.json())
-                            .then(data => {
-                                const userTable = document.getElementById('user_table');
-                                userTable.innerHTML = '';  // Clear existing data
-                
-                                data.forEach(website => {
-                                    userTable.innerHTML += `
-                                        <tr>
-                                            <td>${website.id}</td>
-                                            <td>
-                                                <a href="cards.php?id=${website.id}">${website.website_name}</a>
-                                            </td>
-                                            <td>${website.domain_name}</td>
-                                            <td>${website.hosting_company}</td>
-                                            <td>${website.country}</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-edit btn-warning" onclick="editUser(${website.id})">
-                                                    <i class="ri-file-edit-fill"></i> Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-delete btn-danger" onclick="confirmDelete(${website.id})">
-                                                    <i class="ri-delete-bin-5-fill"></i> Delete
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    `;
-                                });
-                            })
-                            .catch(error => console.error('There has been a problem with your fetch operation:', error));
-                    }
-                
-                    // Load user data on page load
-                    document.addEventListener('DOMContentLoaded', loadUserData);
-                
-                    // Function to handle the edit action
-                    function editUser(userId) {
-                        window.location.href = `charts.php?id=${userId}`;
-                    }
-                
-                    // Function to confirm and delete user
-                    function confirmDelete(userId) {
-                        // Using a single confirmation popup
-                        if (window.confirm('Are you sure you want to delete this website?')) {
-                            deleteUser(userId);
-                        }
-                    }
-                
-                    // Function to handle the delete action
-                    function deleteUser(userId) {
-                        fetch(`del_web.php`, {
-                            method: 'POST',  // Use POST for PHP
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',  // Form URL encoded
-                            },
-                            body: `id=${userId}`,  // Pass the website ID to delete
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                loadUserData();  // Reload the table after deletion
-                            } else {
-                                alert('Error deleting the website.');
-                            }
-                        })
-                        .catch(error => console.error('Error deleting the website:', error));
-                    }
-                </script>
-                
 
 
 
+                <!-- End of Page Wrapper -->
+
+                <!-- Scroll to Top Button-->
                 <a class="scroll-to-top rounded" href="#page-top">
                     <i class="fas fa-angle-up"></i>
                 </a>
@@ -560,18 +560,159 @@
                         </div>
                     </div>
                 </div>
-                <!-- Footer -->
-                <footer class="sticky-footer bg-white">
-                    <div class="container my-auto">
-                        <div class="copyright text-center my-auto">
-                            <span>Copyright &copy; Your Website 2024</span>
-                        </div>
-                    </div>
-                </footer>
-                <!-- End of Footer -->
+                <!-- <script>
+                    $(document).ready(function() {
+                        $('#email').on('blur', function() { // Trigger when the user finishes typing (on blur event)
+                            var email = $(this).val();
 
-                <!-- Bootstrap core JavaScript-->
-                <script src="vendor/jquery/jquery.min.js"></script>
+                            if (email != '') {
+                                $.ajax({
+                                    url: 'email_user_info.php', // PHP file to check the email
+                                    method: 'POST',
+                                    data: {
+                                        email: email
+                                    },
+                                    success: function(response) {
+                                        $('#email-status').html(response);
+                                    }
+                                });
+                            } else {
+                                $('#email-status').html('');
+                            }
+                        });
+                    });
+                </script> -->
+                <script>
+                    document.getElementById('user_name').addEventListener('input', function() {
+                        const userName = this.value;
+                        const usernameError = document.getElementById('username-error');
+
+                        // Regular expression to check for alphabetic characters only
+                        const pattern = /^[A-Za-z]+$/;
+
+                        if (!pattern.test(userName)) {
+                            usernameError.style.display = 'block';
+                        } else {
+                            usernameError.style.display = 'none';
+                        }
+                    });
+                </script>
+                <script>
+                    $(document).ready(function() {
+                        $("#email").on('input', function() {
+                            var email = $(this).val();
+
+                            if (email !== "") {
+                                $.ajax({
+                                    url: 'check_email_user.php',
+                                    method: 'POST',
+                                    data: {
+                                        email: email
+                                    },
+                                    success: function(response) {
+                                        if (response === "exists") {
+                                            $("#email-status").text("This email is already registered.").css("color", "red");
+                                            $("#email").css("border-color", "red");
+                                            $("#submit").attr("disabled", true); // Disable the submit button
+                                        } else {
+                                            $("#email-status").text("Email is available.").css("color", "green");
+                                            $("#email").css("border-color", "");
+                                            $("#submit").attr("disabled", false); // Enable the submit button
+                                        }
+                                    }
+                                });
+                            } else {
+                                $("#email-status").text("");
+                                $("#email").css("border-color", "");
+                                $("#submit").attr("disabled", false); // Enable the submit button
+                            }
+                        });
+                    });
+                </script>
+                <!-- add the password ajax -->
+                <script>
+                    document.getElementById('password').addEventListener('input', function() {
+                        const password = this.value;
+                        const passwordError = document.getElementById('password-error');
+
+                        // Regular expression to check for the required password pattern
+                        const pattern = /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}:;.,]).{8,}$/;
+
+                        if (!pattern.test(password)) {
+                            passwordError.style.display = 'block';
+                        } else {
+                            passwordError.style.display = 'none';
+                        }
+                    });
+                </script>
+
+                <!-- Adding the image Script code -->
+                <script>
+                    document.getElementById('image').addEventListener('change', function() {
+                        const file = this.files[0];
+                        const imageError = document.getElementById('image-error');
+                        const sizeError = document.getElementById('size-error');
+                        const dimensionError = document.getElementById('dimension-error');
+
+                        // Reset error messages
+                        imageError.style.display = 'none';
+                        sizeError.style.display = 'none';
+                        dimensionError.style.display = 'none';
+
+                        if (file) {
+                            const reader = new FileReader();
+
+                            // Validate file size (2 MB limit)
+                            const maxSize = 2 * 1024 * 1024; // 2MB
+                            if (file.size > maxSize) {
+                                sizeError.style.display = 'block';
+                                this.value = ''; // Clear the file input
+                                return;
+                            }
+
+                            // Validate file header (magic number)
+                            reader.onload = function(e) {
+                                const header = new Uint8Array(e.target.result).subarray(0, 4);
+                                let valid = false;
+
+                                const jpg = header[0] === 0xFF && header[1] === 0xD8 && header[2] === 0xFF;
+                                const png = header[0] === 0x89 && header[1] === 0x50 && header[2] === 0x4E && header[3] === 0x47;
+
+                                if (jpg || png) {
+                                    valid = true;
+                                }
+
+                                if (!valid) {
+                                    imageError.style.display = 'block';
+                                    document.getElementById('image').value = ''; // Clear the file input
+                                    return;
+                                } else {
+                                    imageError.style.display = 'none';
+
+                                    // Validate image dimensions
+                                    const img = new Image();
+                                    img.src = URL.createObjectURL(file);
+
+                                    img.onload = function() {
+                                        const maxWidth = 1024; // Example standard width
+                                        const maxHeight = 768; // Example standard height
+
+                                        if (img.width > maxWidth || img.height > maxHeight) {
+                                            dimensionError.style.display = 'block';
+                                            document.getElementById('image').value = ''; // Clear the file input
+                                        } else {
+                                            dimensionError.style.display = 'none';
+                                        }
+                                    };
+                                }
+                            };
+
+                            reader.readAsArrayBuffer(file);
+                        }
+                    });
+                </script>
+                <script src="vendor/jquery/jquery.min.js">
+                </script>
                 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
                 <!-- Core plugin JavaScript-->
@@ -583,6 +724,7 @@
                 <script src="js/jQuery.js"></script>
                 <script src="js/bootstrap.js"></script>
                 <script src="js/myajax.js"></script>
+
 </body>
 
 </html>

@@ -1,3 +1,32 @@
+<?php
+// session_start(); // Start the session
+
+// // Check if the user is logged in as admin
+// if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+//     header("Location: login.html"); // Redirect to login if not logged in
+//     exit();
+// }
+
+// Database connection settings
+$servername = "localhost";
+$username = "root"; // Replace with your database username
+$password = ""; // Replace with your database password
+$dbname = "web_info"; // Replace with your database name
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch website data
+$sql = "SELECT * FROM website_info"; // Replace with your query to fetch web details
+$result = $conn->query($sql);
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,18 +54,18 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #f4f4f9;
             margin: 0;
             padding: 0;
         }
 
         .container {
-            width: 400px;
+            max-width: 800px;
             margin: 50px auto;
             padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
@@ -45,7 +74,7 @@
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         label {
@@ -56,30 +85,70 @@
 
         input[type="text"],
         input[type="email"],
-        input[type="tel"],
         input[type="password"],
         input[type="file"],
         select {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #5cb85c;
-            border: none;
-            border-radius: 4px;
-            color: #fff;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             font-size: 16px;
-            cursor: pointer;
         }
 
-        button:hover {
-            background-color: #4cae4c;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-add-user {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            margin: 20px 0;
+        }
+
+        .btn-add-user:hover {
+            background-color: #007bff;
+        }
+
+        .mt-4 {
+            text-align: center;
         }
     </style>
 
@@ -427,86 +496,123 @@
 
                 <!-- Begin Page Content -->
 
-                <div class="container">
-                    <h2>Registration Form</h2>
-                    <form action="process_registration.php" method="POST" enctype="multipart/form-data">
-                        <!-- Full Name Field -->
-                        <div class="form-group">
-                            <label for="name">Full Name</label>
-                            <input type="text" id="name" name="name" pattern="[A-Za-z\s]+"
-                                title="Name should only contain letters and spaces." required>
-                        </div>
+                <div class="container mt-5">
+                    <?php
+                    // Database connection settings
+                    $servername = "localhost";
+                    $username = "root"; // Replace with your database username
+                    $password = ""; // Replace with your database password
+                    $dbname = "web_info"; // Replace with your database name
 
-                        <!-- Email Field -->
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" required>
-                            <span id="email-status"></span>
-                        </div>
-                        <!-- Phone Number Field -->
-                        <div class="form-group">
-                            <label for="phone">Phone</label>
-                            <input type="tel" id="phone" name="phone" pattern="[0-9]{11}"
-                                title="Phone number should be 11 digits." required>
-                        </div>
+                    // Create connection
+                    $conn = new mysqli($servername, $username, $password, $dbname);
 
-                        <!-- Password Field -->
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" id="password" name="password" minlength="8"
-                                   pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}:;.,]).{8,}$"
-                                   title="Password must be at least 8 characters long, contain at least one uppercase letter, and one special character."
-                                   required>
-                            <small id="password-error" style="color: red; display: none;">Password must be at least 8 characters long, contain at least one uppercase letter, and one special character.</small>
-                        </div>
-                        
-                        <!-- Profile Image Field -->
-                        <div class="form-group">
-                            <label for="image">Profile Image</label>
-                            <input type="file" id="image" name="image" accept=".jpg,.jpeg,.png"
-                                   title="Only JPG, JPEG, and PNG formats are allowed." required>
-                            <small id="image-error" style="color: red; display: none;">Invalid image format. Please upload a valid JPG, JPEG, or PNG file.</small>
-                            <small id="size-error" style="color: red; display: none;">Image size should not exceed 2 MB.</small>
-                            <small id="dimension-error" style="color: red; display: none;">Invalid image dimensions. Please upload an image with standard dimensions.</small>
-                        </div>
+                    // Check connection
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                    }
 
-                        <!-- Country Dropdown -->
-                        <div class="form-group">
-                            <label for="country">Country</label>
-                            <select id="country" name="country" required>
-                                <option value="">Select Country</option>
-                                <!-- Countries will be loaded dynamically -->
-                            </select>
-                        </div>
+                    // Get the website ID from the query parameter
+                    $website_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-                        <!-- State Dropdown -->
-                        <div class="form-group">
-                            <label for="state">State</label>
-                            <select id="state" name="state" required>
-                                <option value="">Select State</option>
-                                <!-- States will be loaded dynamically based on the selected country -->
-                            </select>
-                        </div>
+                    // Ensure the ID is valid
+                    if ($website_id <= 0) {
+                        echo "<p>Invalid website ID.</p>";
+                        exit();
+                    }
 
-                        <!-- City Dropdown -->
-                        <div class="form-group">
-                            <label for="city">City</label>
-                            <select id="city" name="city" required>
-                                <option value="">Select City</option>
-                                <!-- Cities will be loaded dynamically based on the selected state -->
-                            </select>
-                        </div>
+                    // SQL query to get website details for the specific ID
+                    $sql = "SELECT * FROM website_info WHERE id = ?";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("i", $website_id); // "i" denotes the type of parameter, "i" for integer
+                    $stmt->execute();
+                    $website_result = $stmt->get_result();
 
-                        <!-- Submit Button -->
-                        <div class="form-group">
-                            <button type="submit">Register</button>
+                    // Check if the query was successful
+                    if (!$website_result) {
+                        echo "<p>Error fetching website details: " . $conn->error . "</p>";
+                    } else {
+                        // Check if there are any results
+                        if ($website_result->num_rows > 0) {
+                            // Output website data
+                            $website = $website_result->fetch_assoc();
+                            echo '<div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h3 class="m-0 font-weight-bold text-primary text-center">Website Details</h3>
                         </div>
-                    </form>
+                        <div class="card-body">
+                            <p><strong>Website Name:</strong> ' . htmlspecialchars($website['website_name']) . '</p>
+                            <p><strong>Domain Name:</strong> ' . htmlspecialchars($website['domain_name']) . '</p>
+                            <p><strong>Hosting Company:</strong> ' . htmlspecialchars($website['hosting_company']) . '</p>
+                            <p><strong>Country:</strong> ' . htmlspecialchars($website['country']) . '</p>';
+
+                            // Fetch user data related to the website
+                            $user_sql = "SELECT * FROM user_info WHERE website_id = ?";
+                            $user_stmt = $conn->prepare($user_sql);
+                            $user_stmt->bind_param("i", $website_id);
+                            $user_stmt->execute();
+                            $user_result = $user_stmt->get_result();
+
+                            // Check if the query was successful
+                            if (!$user_result) {
+                                echo "<p>Error fetching user details: " . $conn->error . "</p>";
+                            } else {
+                                // Display user data
+                                echo '<div class="text-center-table">
+                    <h3 class="mt-4">User Details</h3>';
+
+                    echo '<div class="d-flex justify-content-end">
+                    <a href="add_user.php?id=' . $website_id . '" class="btn btn-primary mt-3 custom-button">Add User</a>
+                  </div>';
+            
+                                if ($user_result->num_rows > 0) {
+                                    echo '<div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>User Name</th>
+                                            <th>Email</th>
+                                            <th>Password</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>';
+                                    while ($user = $user_result->fetch_assoc()) {
+                                        echo '<tr>
+                                    <td>' . htmlspecialchars($user['id']) . '</td>
+                                    <td>' . htmlspecialchars($user['user_name']) . '</td>
+                                    <td>' . htmlspecialchars($user['email']) . '</td>
+                                    <td>' . htmlspecialchars($user['password']) . '</td>
+                                  </tr>';
+                                    }
+                                    echo '</tbody>
+                              </table>
+                              </div>';
+                                } else {
+                                    echo "<p>No user details found for website ID $website_id.</p>";
+                                }
+                            }
+
+                            // Close the user statement
+                            $user_stmt->close();
+                        } else {
+                            echo "<p>No website details found for ID $website_id.</p>";
+                        }
+                    }
+
+                    // Close the statements and connection
+                    $stmt->close();
+                    $conn->close();
+                    ?>
                 </div>
+
+
+
+
 
                 <script>
                     // JavaScript for dynamic dropdowns
-                    document.addEventListener('DOMContentLoaded', function () {
+                    document.addEventListener('DOMContentLoaded', function() {
                         const countrySelect = document.getElementById('country');
                         const stateSelect = document.getElementById('state');
                         const citySelect = document.getElementById('city');
@@ -521,7 +627,7 @@
                             });
 
                         // Load states based on selected country
-                        countrySelect.addEventListener('change', function () {
+                        countrySelect.addEventListener('change', function() {
                             const countryId = this.value;
                             if (countryId) {
                                 fetch(`load_states.php?country_id=${countryId}`)
@@ -539,7 +645,7 @@
                         });
 
                         // Load cities based on selected state
-                        stateSelect.addEventListener('change', function () {
+                        stateSelect.addEventListener('change', function() {
                             const stateId = this.value;
                             if (stateId) {
                                 fetch(`load_cities.php?state_id=${stateId}`)
@@ -557,7 +663,7 @@
                     });
 
                     // Client-side form validation
-                    document.querySelector('form').addEventListener('submit', function (event) {
+                    document.querySelector('form').addEventListener('submit', function(event) {
                         const phoneInput = document.getElementById('phone');
                         const phonePattern = /^[0-9]{11}$/; // Example: 10-digit phone number
                         if (!phonePattern.test(phoneInput.value)) {
@@ -567,13 +673,13 @@
                     });
                 </script>
                 <script>
-                    document.getElementById('password').addEventListener('input', function () {
+                    document.getElementById('password').addEventListener('input', function() {
                         const password = this.value;
                         const passwordError = document.getElementById('password-error');
-                
+
                         // Regular expression to check for the required password pattern
                         const pattern = /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}:;.,]).{8,}$/;
-                
+
                         if (!pattern.test(password)) {
                             passwordError.style.display = 'block';
                         } else {
@@ -581,8 +687,8 @@
                         }
                     });
                 </script>
-                
-                
+
+
 
                 <!-- End of Page Wrapper -->
 
@@ -612,16 +718,18 @@
                     </div>
                 </div>
                 <script>
-                    $(document).ready(function () {
-                        $("#email").on('input', function () {
+                    $(document).ready(function() {
+                        $("#email").on('input', function() {
                             var email = $(this).val();
 
                             if (email !== "") {
                                 $.ajax({
                                     url: 'check_email_user.php',
                                     method: 'POST',
-                                    data: { email: email },
-                                    success: function (response) {
+                                    data: {
+                                        email: email
+                                    },
+                                    success: function(response) {
                                         if (response === "exists") {
                                             $("#email-status").text("This email is already registered.").css("color", "red");
                                             $("#email").css("border-color", "red");
@@ -642,71 +750,72 @@
                     });
                 </script>
                 <!-- Adding the image Script code -->
-               <script>
-                document.getElementById('image').addEventListener('change', function () {
-                    const file = this.files[0];
-                    const imageError = document.getElementById('image-error');
-                    const sizeError = document.getElementById('size-error');
-                    const dimensionError = document.getElementById('dimension-error');
-                
-                    // Reset error messages
-                    imageError.style.display = 'none';
-                    sizeError.style.display = 'none';
-                    dimensionError.style.display = 'none';
-                
-                    if (file) {
-                        const reader = new FileReader();
-                
-                        // Validate file size (2 MB limit)
-                        const maxSize = 2 * 1024 * 1024; // 2MB
-                        if (file.size > maxSize) {
-                            sizeError.style.display = 'block';
-                            this.value = '';  // Clear the file input
-                            return;
-                        }
-                
-                        // Validate file header (magic number)
-                        reader.onload = function (e) {
-                            const header = new Uint8Array(e.target.result).subarray(0, 4);
-                            let valid = false;
-                
-                            const jpg = header[0] === 0xFF && header[1] === 0xD8 && header[2] === 0xFF;
-                            const png = header[0] === 0x89 && header[1] === 0x50 && header[2] === 0x4E && header[3] === 0x47;
-                
-                            if (jpg || png) {
-                                valid = true;
-                            }
-                
-                            if (!valid) {
-                                imageError.style.display = 'block';
-                                document.getElementById('image').value = '';  // Clear the file input
+                <script>
+                    document.getElementById('image').addEventListener('change', function() {
+                        const file = this.files[0];
+                        const imageError = document.getElementById('image-error');
+                        const sizeError = document.getElementById('size-error');
+                        const dimensionError = document.getElementById('dimension-error');
+
+                        // Reset error messages
+                        imageError.style.display = 'none';
+                        sizeError.style.display = 'none';
+                        dimensionError.style.display = 'none';
+
+                        if (file) {
+                            const reader = new FileReader();
+
+                            // Validate file size (2 MB limit)
+                            const maxSize = 2 * 1024 * 1024; // 2MB
+                            if (file.size > maxSize) {
+                                sizeError.style.display = 'block';
+                                this.value = ''; // Clear the file input
                                 return;
-                            } else {
-                                imageError.style.display = 'none';
-                
-                                // Validate image dimensions
-                                const img = new Image();
-                                img.src = URL.createObjectURL(file);
-                
-                                img.onload = function () {
-                                    const maxWidth = 1024;  // Example standard width
-                                    const maxHeight = 768;  // Example standard height
-                
-                                    if (img.width > maxWidth || img.height > maxHeight) {
-                                        dimensionError.style.display = 'block';
-                                        document.getElementById('image').value = '';  // Clear the file input
-                                    } else {
-                                        dimensionError.style.display = 'none';
-                                    }
-                                };
                             }
-                        };
-                
-                        reader.readAsArrayBuffer(file);
-                    }
-                });
-                </script
-                <script src="vendor/jquery/jquery.min.js"></script>
+
+                            // Validate file header (magic number)
+                            reader.onload = function(e) {
+                                const header = new Uint8Array(e.target.result).subarray(0, 4);
+                                let valid = false;
+
+                                const jpg = header[0] === 0xFF && header[1] === 0xD8 && header[2] === 0xFF;
+                                const png = header[0] === 0x89 && header[1] === 0x50 && header[2] === 0x4E && header[3] === 0x47;
+
+                                if (jpg || png) {
+                                    valid = true;
+                                }
+
+                                if (!valid) {
+                                    imageError.style.display = 'block';
+                                    document.getElementById('image').value = ''; // Clear the file input
+                                    return;
+                                } else {
+                                    imageError.style.display = 'none';
+
+                                    // Validate image dimensions
+                                    const img = new Image();
+                                    img.src = URL.createObjectURL(file);
+
+                                    img.onload = function() {
+                                        const maxWidth = 1024; // Example standard width
+                                        const maxHeight = 768; // Example standard height
+
+                                        if (img.width > maxWidth || img.height > maxHeight) {
+                                            dimensionError.style.display = 'block';
+                                            document.getElementById('image').value = ''; // Clear the file input
+                                        } else {
+                                            dimensionError.style.display = 'none';
+                                        }
+                                    };
+                                }
+                            };
+
+                            reader.readAsArrayBuffer(file);
+                        }
+                    });
+                </script>
+                <script src="vendor/jquery/jquery.min.js">
+                </script>
                 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
                 <!-- Core plugin JavaScript-->

@@ -1,3 +1,73 @@
+<?php
+// session_start();
+
+// // Check if the user is logged in as admin
+// if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+//     header("Location: login.php");
+//     exit();
+// }
+
+// Database connection settings
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "web_info";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Initialize variables
+$website_name = '';
+$domain_name = '';
+$hosting_company = '';
+$country = '';
+
+// Process form submission
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Get POST data and check if fields are set
+    $website_name = isset($_POST['website_name']) ? $conn->real_escape_string($_POST['website_name']) : '';
+    $domain_name = isset($_POST['domain_name']) ? $conn->real_escape_string($_POST['domain_name']) : '';
+    $hosting_company = isset($_POST['hosting_company']) ? $conn->real_escape_string($_POST['hosting_company']) : '';
+    $country = isset($_POST['country']) ? $conn->real_escape_string($_POST['country']) : '';
+
+    // Check if all required fields are filled
+    if ($website_name && $domain_name && $hosting_company && $country) {
+        // Insert query
+        $sql = "INSERT INTO website_info (website_name, domain_name, hosting_company, country) 
+                VALUES ('$website_name', '$domain_name', '$hosting_company', '$country')";
+
+        if ($conn->query($sql) === TRUE) {
+            header("Location: buttons.html"); // Or show an error message
+            exit();
+        } else {
+            $message = "Error: " . $sql . "<br>" . $conn->error;
+        }
+    } else {
+        $message = "Please fill all required fields.";
+    }
+}
+
+// Fetch countries for dropdown
+$sql = "SELECT name FROM countries";
+$result = $conn->query($sql);
+$countries = [];
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $countries[] = htmlspecialchars($row['name']);
+    }
+}
+
+// Close connection
+$conn->close();
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,13 +79,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>MK Admin 2 - Buttons</title>
-
-    <!-- Bootstrap -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Remix Icon -->
-    <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
-
+    <title>MK Admin 2 - Charts</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -25,61 +89,6 @@
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
-    <!-- Include Bootstrap CSS for styling -->
-    <link rel="stylesheet" href="css/bootstrap.css">
-
-    <!-- Page title -->
-
-    <!-- Custom CSS for header, form, details container, and buttons -->
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            text-align: center;
-            color: #333;
-        }
-
-        .table-responsive {
-            margin-top: 20px;
-        }
-
-        .action-col {
-            text-align: center;
-        }
-
-        .custom-button {
-            margin-right: 20px;
-        }
-
-        .btn-edit {
-            background-color: #17a2b8;
-            color: white;
-        }
-
-        .btn-delete {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .btn-sm {
-            padding: 5px 10px;
-            margin-right: 5px;
-        }
-    </style>
 
 </head>
 
@@ -97,7 +106,6 @@
                     <img src="mk_logo%20(2).webp" alt="Logo" style="width: 60px; height: 60px;">
                 </div>
                 <div class="sidebar-brand-text mx-3">MK UserNest</div>
-            </a>
             </a>
 
             <!-- Divider -->
@@ -142,8 +150,8 @@
                         <a class="collapse-item" href="cards.html">Input</a>
                     </div>
                 </div>
-            </li> -->
-
+            </li>
+             -->
 
             <!-- Nav Item - Utilities Collapse Menu -->
             <!-- <li class="nav-item">
@@ -167,26 +175,11 @@
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <!-- Heading -->
 
 
-            <!-- Nav Item - Charts -->
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="charts.html">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span></a>
-            </li> -->
-
-            <!-- Nav Item - Tables -->
-            <!-- Add Location Navigation Item -->
             <div class="sidebar-heading">
                 Pages
             </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-
-
-
 
             <!-- Nav Item - Tables -->
             <!-- Add Location Navigation Item -->
@@ -202,7 +195,6 @@
                     <span>Register</span>
                 </a>
             </li>
-
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
@@ -336,7 +328,8 @@
                                 </h6>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg" alt="...">
+                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
+                                            alt="...">
                                         <div class="status-indicator bg-success"></div>
                                     </div>
                                     <div class="font-weight-bold">
@@ -347,7 +340,8 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_2.svg" alt="...">
+                                        <img class="rounded-circle" src="img/undraw_profile_2.svg"
+                                            alt="...">
                                         <div class="status-indicator"></div>
                                     </div>
                                     <div>
@@ -358,7 +352,8 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_3.svg" alt="...">
+                                        <img class="rounded-circle" src="img/undraw_profile_3.svg"
+                                            alt="...">
                                         <div class="status-indicator bg-warning"></div>
                                     </div>
                                     <div>
@@ -390,7 +385,8 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Muhammad Kashif</span>
-                                <img class="img-profile rounded-circle" src="img/M kashif.jpeg">
+                                <img class="img-profile rounded-circle"
+                                    src="img/M kashif.jpeg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -421,168 +417,168 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <!-- <div class="container-fluid"> -->
-
-                <!-- Page Heading -->
-                <!-- <h1 class="h3 mb-4 text-gray-800">Buttons</h1> -->
-
-                <!-- <div class="row"> -->
-
-                <!-- Main container and header for the application -->
-                <div class="container mt-5">
+                <div class="container">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h3 class="m-0 font-weight-bold text-primary text-center">Website Details</h3>
+                            <h3 class="m-0 font-weight-bold text-center">Add Website Information</h3>
                         </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary mt-3 custom-button"
-                                onclick="window.location.href='add_web.php';">Add Website</button>
-                        </div>
-
-
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="userTable" width="100%" cellspacing="0">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Website Name</th>
-                                            <th>Domain Name</th>
-                                            <th>Hosting Company</th>
-                                            <th>Country</th>
-                                            <th class="action-col">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="user_table">
-                                        <!-- User data will be appended here dynamically -->
-                                    </tbody>
-                                </table>
-                            </div>
+                            <?php if (isset($message)) : ?>
+                                <div class="alert alert-info" role="alert">
+                                    <?php echo $message; ?>
+                                </div>
+                            <?php endif; ?>
+                            <form action="" method="post">
+                                <!-- Website Name field -->
+                                <div class="form-group">
+                                    <label for="website_name">Website Name:</label>
+                                    <input type="text" class="form-control" id="website_name" name="website_name" value="<?php echo htmlspecialchars($website_name); ?>" required>
+                                </div>
+
+                                <!-- Domain Name field -->
+                                <div class="form-group">
+                                    <label for="domain_name">Domain Name:</label>
+                                    <input type="text" class="form-control" id="domain_name" name="domain_name" value="<?php echo htmlspecialchars($domain_name); ?>" required>
+                                </div>
+
+                                <!-- Hosting Company field -->
+                                <div class="form-group">
+                                    <label for="hosting_company">Hosting Company:</label>
+                                    <input type="text" class="form-control" id="hosting_company" name="hosting_company" value="<?php echo htmlspecialchars($hosting_company); ?>" required>
+                                </div>
+
+                                <!-- Country dropdown -->
+                                <div class="form-group">
+                                    <label for="country">Country:</label>
+                                    <select id="country" name="country" class="form-control" required>
+                                        <option value="" disabled>Select country</option>
+                                        <?php foreach ($countries as $country_name) : ?>
+                                            <option value="<?php echo htmlspecialchars($country_name); ?>" <?php if ($country_name == $country) echo 'selected'; ?>>
+                                                <?php echo htmlspecialchars($country_name); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <!-- Submit button -->
+                                <div class="form-group text-center">
+                                    <button type="submit" class="btn btn-primary">Add Website</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
+                <!-- Content Row -->
 
-                <script>
-                    // Function to fetch and display user data
-                    function loadUserData() {
-                        fetch('fetch_web.php')  // Fetch data from the PHP file
-                            .then(response => response.json())
-                            .then(data => {
-                                const userTable = document.getElementById('user_table');
-                                userTable.innerHTML = '';  // Clear existing data
-                
-                                data.forEach(website => {
-                                    userTable.innerHTML += `
-                                        <tr>
-                                            <td>${website.id}</td>
-                                            <td>
-                                                <a href="cards.php?id=${website.id}">${website.website_name}</a>
-                                            </td>
-                                            <td>${website.domain_name}</td>
-                                            <td>${website.hosting_company}</td>
-                                            <td>${website.country}</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-edit btn-warning" onclick="editUser(${website.id})">
-                                                    <i class="ri-file-edit-fill"></i> Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-delete btn-danger" onclick="confirmDelete(${website.id})">
-                                                    <i class="ri-delete-bin-5-fill"></i> Delete
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    `;
-                                });
-                            })
-                            .catch(error => console.error('There has been a problem with your fetch operation:', error));
-                    }
-                
-                    // Load user data on page load
-                    document.addEventListener('DOMContentLoaded', loadUserData);
-                
-                    // Function to handle the edit action
-                    function editUser(userId) {
-                        window.location.href = `charts.php?id=${userId}`;
-                    }
-                
-                    // Function to confirm and delete user
-                    function confirmDelete(userId) {
-                        // Using a single confirmation popup
-                        if (window.confirm('Are you sure you want to delete this website?')) {
-                            deleteUser(userId);
+                <!-- /.container-fluid -->
+
+            </div>
+
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2024</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            // When the country dropdown changes
+            $('#country').on('change', function() {
+                var countryId = $(this).val();
+                if (countryId) {
+                    $.ajax({
+                        url: 'fetch_states.php',
+                        type: 'POST',
+                        data: {
+                            country_id: countryId
+                        },
+                        success: function(data) {
+                            $('#state').html(data); // Populate the state dropdown
+                            $('#city').html('<option value="">Select City</option>'); // Clear the city dropdown
                         }
-                    }
-                
-                    // Function to handle the delete action
-                    function deleteUser(userId) {
-                        fetch(`del_web.php`, {
-                            method: 'POST',  // Use POST for PHP
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',  // Form URL encoded
-                            },
-                            body: `id=${userId}`,  // Pass the website ID to delete
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                loadUserData();  // Reload the table after deletion
-                            } else {
-                                alert('Error deleting the website.');
-                            }
-                        })
-                        .catch(error => console.error('Error deleting the website:', error));
-                    }
-                </script>
-                
+                    });
+                } else {
+                    $('#state').html('<option value="">Select State</option>');
+                    $('#city').html('<option value="">Select City</option>');
+                }
+            });
+
+            // When the state dropdown changes
+            $('#state').on('change', function() {
+                var stateId = $(this).val();
+                if (stateId) {
+                    $.ajax({
+                        url: 'fetch_cities.php',
+                        type: 'POST',
+                        data: {
+                            state_id: stateId
+                        },
+                        success: function(data) {
+                            $('#city').html(data); // Populate the city dropdown
+                        }
+                    });
+                } else {
+                    $('#city').html('<option value="">Select City</option>');
+                }
+            });
+        });
+    </script>
 
 
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-                <a class="scroll-to-top rounded" href="#page-top">
-                    <i class="fas fa-angle-up"></i>
-                </a>
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-                <!-- Logout Modal-->
-                <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">Select "Logout" below if you are ready to end your current session.
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                <a class="btn btn-primary" href="login.html">Logout</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Footer -->
-                <footer class="sticky-footer bg-white">
-                    <div class="container my-auto">
-                        <div class="copyright text-center my-auto">
-                            <span>Copyright &copy; Your Website 2024</span>
-                        </div>
-                    </div>
-                </footer>
-                <!-- End of Footer -->
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
 
-                <!-- Bootstrap core JavaScript-->
-                <script src="vendor/jquery/jquery.min.js"></script>
-                <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Page level plugins -->
+    <script src="vendor/chart.js/Chart.min.js"></script>
 
-                <!-- Core plugin JavaScript-->
-                <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Page level custom scripts -->
+    <script src="js/demo/chart-area-demo.js"></script>
+    <script src="js/demo/chart-pie-demo.js"></script>
+    <script src="js/demo/chart-bar-demo.js"></script>
 
-                <!-- Custom scripts for all pages-->
-                <script src="js/sb-admin-2.min.js"></script>
-                <!-- Include jQuery, Bootstrap, and custom AJAX scripts -->
-                <script src="js/jQuery.js"></script>
-                <script src="js/bootstrap.js"></script>
-                <script src="js/myajax.js"></script>
 </body>
 
 </html>
