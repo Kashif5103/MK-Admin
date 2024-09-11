@@ -1,25 +1,31 @@
 <?php
-session_start(); // Start the session
+// Start session
+session_start();
 
-// Check if the user is logged in as admin
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+// Set session timeout duration (e.g., 30 minutes)
+$session_timeout = 30 * 60; // 30 minutes in seconds
+
+// Check if the user is logged in
+if (isset($_SESSION['login_time'])) {
+    // Check if session has expired
+    if ((time() - $_SESSION['login_time']) > $session_timeout) {
+        // Session has expired, destroy session and redirect to login page
+        session_unset();
+        session_destroy();
+        header("Location: login.php?message=session_expired");
+        exit();
+    } else {
+        // Session is still active, update login time to extend session
+        $_SESSION['login_time'] = time();
+    }
+} else {
+    // User is not logged in, redirect to login page
     header("Location: login.html");
     exit();
 }
 
-// Database connection settings
-$servername = "localhost";
-$username = "root"; // Replace with your database username
-$password = ""; // Replace with your database password
-$dbname = "web_info"; // Replace with your database name
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// Include database connection
+include 'connection.php'; // Adjust the file path as needed
 
 // Get the website ID from the query parameter
 $website_id = isset($_GET['id']) ? intval($_GET['id']) : 0;

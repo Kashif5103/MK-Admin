@@ -11,6 +11,9 @@ ini_set('display_errors', 1);
 
 $response = array();
 
+// Set session timeout duration (e.g., 30 minutes)
+$session_timeout = 30 * 60; // 30 minutes in seconds
+
 // Check if form is submitted via POST method
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve email and password from POST request
@@ -31,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Set session variables for the logged-in user
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
+            $_SESSION['login_time'] = time(); // Set login time to the current time
 
             // Return success response and redirect
             $response['status'] = 'success';

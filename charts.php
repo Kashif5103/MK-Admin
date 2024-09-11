@@ -1,16 +1,32 @@
 <?php
-// Start session to access session variables
+// Start session
 session_start();
+
+// Set session timeout duration (e.g., 30 minutes)
+$session_timeout = 30 * 60; // 30 minutes in seconds
+
+// Check if the user is logged in
+if (isset($_SESSION['login_time'])) {
+    // Check if session has expired
+    if ((time() - $_SESSION['login_time']) > $session_timeout) {
+        // Session has expired, destroy session and redirect to login page
+        session_unset();
+        session_destroy();
+        header("Location: login.php?message=session_expired");
+        exit();
+    } else {
+        // Session is still active, update login time to extend session
+        $_SESSION['login_time'] = time();
+    }
+} else {
+    // User is not logged in, redirect to login page
+    header("Location: login.html");
+    exit();
+}
 
 // Include database connection
 include 'connection.php'; // Adjust the file path as needed
 
-// Check if user is logged in (for pages requiring authentication)
-if (!isset($_SESSION['user_id'])) {
-    // User not logged in, redirect to login page
-    header("Location: login.html");
-    exit();
-}
 // Initialize variables
 $website = null;
 
