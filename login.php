@@ -3,7 +3,11 @@
 session_start();
 
 // Include database connection
-require 'connection.php'; // Database connection file
+include 'connection.php'; // Database connection file
+
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 $response = array();
 
@@ -13,12 +17,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $password = mysqli_real_escape_string($conn, $_POST['password']);
 
-    // Query the database to check if the email exists in the admin table
-    $query = "SELECT * FROM admin WHERE email = '$email' LIMIT 1";
-    $result = mysqli_query($conn, $query);
+    // Prepare statement to prevent SQL injection
+    $stmt = $conn->prepare("SELECT * FROM admin WHERE email = ? LIMIT 1");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if ($result && mysqli_num_rows($result) > 0) {
-        $user = mysqli_fetch_assoc($result);
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
 
         // Verify the password
         if (password_verify($password, $user['password'])) {
@@ -26,9 +32,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
 
-            // Return success response
+            // Return success response and redirect
             $response['status'] = 'success';
             $response['message'] = 'Login successful';
+            echo json_encode($response);
+            header("Location: index.php"); // Redirect to the dashboard or home page
+            exit();
         } else {
             // Incorrect password
             $response['status'] = 'error';
@@ -41,9 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Close the database connection
-    mysqli_close($conn);
-
-    // Return JSON response
-    echo json_encode($response);
+    $stmt->close();
+    $conn->close();
 }
 ?>

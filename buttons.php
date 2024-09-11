@@ -1,3 +1,17 @@
+<?php
+// Start session to access session variables
+session_start();
+
+// Include database connection
+include 'connection.php'; // Adjust the file path as needed
+
+// Check if user is logged in (for pages requiring authentication)
+if (!isset($_SESSION['user_id'])) {
+    // User not logged in, redirect to login page
+    header("Location: login.html");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,6 +24,14 @@
     <meta name="author" content="">
 
     <title>MK Admin 2 - Buttons</title>
+
+    <!-- link for the data table -->
+    <link href="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.1.6/b-3.1.2/b-html5-3.1.2/b-print-3.1.2/datatables.min.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.1.6/b-3.1.2/b-html5-3.1.2/b-print-3.1.2/datatables.min.js"></script>
+
 
     <!-- Bootstrap -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
@@ -110,7 +132,7 @@
                     <span>Dashboard</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="buttons.html">
+                <a class="nav-link" href="buttons.php">
                     <i class="fas fa-user-circle"></i> <!-- User logo icon -->
                     <span>User</span>
                 </a>
@@ -465,12 +487,12 @@
                 <script>
                     // Function to fetch and display user data
                     function loadUserData() {
-                        fetch('fetch_web.php')  // Fetch data from the PHP file
+                        fetch('fetch_web.php') // Fetch data from the PHP file
                             .then(response => response.json())
                             .then(data => {
                                 const userTable = document.getElementById('user_table');
-                                userTable.innerHTML = '';  // Clear existing data
-                
+                                userTable.innerHTML = ''; // Clear existing data
+
                                 data.forEach(website => {
                                     userTable.innerHTML += `
                                         <tr>
@@ -495,15 +517,15 @@
                             })
                             .catch(error => console.error('There has been a problem with your fetch operation:', error));
                     }
-                
+
                     // Load user data on page load
                     document.addEventListener('DOMContentLoaded', loadUserData);
-                
+
                     // Function to handle the edit action
                     function editUser(userId) {
                         window.location.href = `charts.php?id=${userId}`;
                     }
-                
+
                     // Function to confirm and delete user
                     function confirmDelete(userId) {
                         // Using a single confirmation popup
@@ -511,28 +533,28 @@
                             deleteUser(userId);
                         }
                     }
-                
+
                     // Function to handle the delete action
                     function deleteUser(userId) {
                         fetch(`del_web.php`, {
-                            method: 'POST',  // Use POST for PHP
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',  // Form URL encoded
-                            },
-                            body: `id=${userId}`,  // Pass the website ID to delete
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                loadUserData();  // Reload the table after deletion
-                            } else {
-                                alert('Error deleting the website.');
-                            }
-                        })
-                        .catch(error => console.error('Error deleting the website:', error));
+                                method: 'POST', // Use POST for PHP
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded', // Form URL encoded
+                                },
+                                body: `id=${userId}`, // Pass the website ID to delete
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    loadUserData(); // Reload the table after deletion
+                                } else {
+                                    alert('Error deleting the website.');
+                                }
+                            })
+                            .catch(error => console.error('Error deleting the website:', error));
                     }
                 </script>
-                
+
 
 
 
@@ -569,6 +591,8 @@
                     </div>
                 </footer>
                 <!-- End of Footer -->
+                 <!-- Script for the data table -->
+                  
 
                 <!-- Bootstrap core JavaScript-->
                 <script src="vendor/jquery/jquery.min.js"></script>

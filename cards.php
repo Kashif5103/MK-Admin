@@ -1,24 +1,15 @@
 <?php
-// session_start(); // Start the session
+// Start session to access session variables
+session_start();
 
-// // Check if the user is logged in as admin
-// if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-//     header("Location: login.html"); // Redirect to login if not logged in
-//     exit();
-// }
+// Include database connection
+include 'connection.php'; // Adjust the file path as needed
 
-// Database connection settings
-$servername = "localhost";
-$username = "root"; // Replace with your database username
-$password = ""; // Replace with your database password
-$dbname = "web_info"; // Replace with your database name
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Check if user is logged in (for pages requiring authentication)
+if (!isset($_SESSION['user_id'])) {
+    // User not logged in, redirect to login page
+    header("Location: login.html");
+    exit();
 }
 
 // Fetch website data
@@ -181,7 +172,7 @@ $result = $conn->query($sql);
                     <span>Dashboard</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="buttons.html">
+                <a class="nav-link" href="buttons.php">
                     <i class="fas fa-user-circle"></i> <!-- User logo icon -->
                     <span>User</span>
                 </a>

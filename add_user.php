@@ -1,19 +1,17 @@
 <?php
-ob_start(); // Start output buffering
+// Start session to access session variables
+session_start();
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "web_info";
+// Include database connection
+include 'connection.php'; // Adjust the file path as needed
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Check if user is logged in (for pages requiring authentication)
+if (!isset($_SESSION['user_id'])) {
+    // User not logged in, redirect to login page
+    header("Location: login.html");
+    exit();
 }
-
+ob_start(); // Start output buffering
 // Retrieve and validate the `id` parameter from the URL
 $website_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
@@ -230,7 +228,7 @@ ob_end_flush(); // End output buffering
                     <span>Dashboard</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="buttons.html">
+                <a class="nav-link" href="buttons.php">
                     <i class="fas fa-user-circle"></i> <!-- User logo icon -->
                     <span>User</span>
                 </a>

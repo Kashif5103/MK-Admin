@@ -1,3 +1,17 @@
+<?php
+// Start session to access session variables
+session_start();
+
+// Include database connection
+require 'connection.php'; // Adjust the file path as needed
+
+// Check if user is logged in (for pages requiring authentication)
+if (!isset($_SESSION['user_id'])) {
+    // User not logged in, redirect to login page
+    header("Location: login.html");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -50,7 +64,7 @@
                     <span>Dashboard</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="buttons.html">
+                <a class="nav-link" href="buttons.php">
                     <i class="fas fa-user-circle"></i> <!-- User logo icon -->
                     <span>User</span>
                 </a>

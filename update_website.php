@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Execute the query
     if (mysqli_query($conn, $query)) {
         // Redirect to a success page or another page
-        header("Location: buttons.html"); // Change to your desired redirect page
+        header("Location: buttons.php"); // Change to your desired redirect page
         exit();
     } else {
         // Error handling

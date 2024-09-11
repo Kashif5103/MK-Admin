@@ -71,13 +71,13 @@
     <script src="js/sb-admin-2.min.js"></script>
 
     <!-- AJAX for login form -->
-    <script>
+    <!-- <script>
         $(document).ready(function () {
             $('#login_form').on('submit', function (e) {
                 e.preventDefault(); // Prevent default form submission
-
+    
                 let formData = $(this).serialize(); // Serialize form data
-
+    
                 // AJAX request
                 $.ajax({
                     url: 'login.php',
@@ -86,7 +86,7 @@
                     dataType: 'json',
                     success: function (response) {
                         if (response.status === 'success') {
-                            window.location.href = 'index.php'; // Redirect to index.html on success
+                            window.location.href = 'index.php'; // Redirect to index.php on success
                         } else {
                             $('#status_message').removeClass('alert-success').addClass('alert-danger').html(response.message).show();
                         }
@@ -97,7 +97,8 @@
                 });
             });
         });
-    </script>
+    </script> -->
+    
 </body>
 
 </html>
